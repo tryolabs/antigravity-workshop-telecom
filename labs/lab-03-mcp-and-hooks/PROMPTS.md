@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 03 — Optimized Antigravity Prompts Cheat Sheet (English)
 
 > **Goal**: Connect **Google Antigravity** (governed by **Gemini Enterprise** and delivered by **Tryolabs**) to live Telecom OSS/BSS databases via **Model Context Protocol (FastMCP)** and enforce deterministic CPNI/database security via **Lifecycle Hooks (`hooks.json`)**.

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Prompts de Antigravity del Laboratorio 04: Multi-Agente ADK, Protocolo A2A, ADK Dev UI y Gemini Enterprise
 
 [English](PROMPTS.md) | **Español** | [Guía del Laboratorio 04](README.es.md)

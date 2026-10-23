@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 01: 5G Slice SLA & CDR Revenue Assurance Triage
 
 **Duration**: 45 minutes  

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 02: Encoding Telecom Domain Standards with Rules & Custom Skills
 
 **Duration**: 45 minutes  

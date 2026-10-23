@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Telecom Nexus — Workspace Engineering Constitution (`GEMINI.md`)
 
 ## 1. Domain Architecture & Mission

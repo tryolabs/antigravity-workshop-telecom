@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Telecom 3GPP, GSMA TAP3 & TMF Open API Governance Rules
 
 ## 1. 3GPP & GSMA Standards Compliance

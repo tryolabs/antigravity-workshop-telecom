@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 02 — Guía de Prompts Optimizados para Antigravity (Español)
 
 > **Objetivo**: Utilizar **Google Antigravity** (asociado a tu licencia de **Gemini Enterprise** e impartido por **Tryolabs**) para codificar la gobernanza técnica y comercial Telecom (3GPP/GSMA/TMF) en:

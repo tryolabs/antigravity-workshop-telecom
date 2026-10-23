@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 01 — Optimized Antigravity Prompts Cheat Sheet (English)
 
 > **Goal**: Use **Google Antigravity** (Antigravity 2.0 Desktop App, Antigravity IDE, or `agy` CLI) to diagnose and repair two critical production incidents in **Telecom Nexus**:

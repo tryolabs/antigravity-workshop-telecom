@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 03: Live OSS/BSS Telemetry via FastMCP, Lifecycle Hooks & Gemini Enterprise Security
 
 **Duration**: 50 minutes  

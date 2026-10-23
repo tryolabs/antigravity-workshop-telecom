@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 02 — Optimized Antigravity Prompts Cheat Sheet (English)
 
 > **Goal**: Use **Google Antigravity** (associated with your **Gemini Enterprise** license and delivered by **Tryolabs**) to encode Telecom 3GPP/GSMA/TMF domain governance into:

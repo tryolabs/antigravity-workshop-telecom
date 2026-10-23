@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 02: Estándares Telecom con Rules y Custom Skills en Antigravity
 
 **Duración**: 45 minutos  

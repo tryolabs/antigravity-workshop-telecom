@@ -40,9 +40,9 @@ color: #f0f6fc
 - Hora 4 (02:59–04:00): [6m Teoría] Subagentes, ADK, A2A y Terraform → [55m Lab 4] Capstone Multi-Agente, ADK Dev UI y Cloud
 - Checkpoints Auto-Recuperables: ¡Ejecutar ./labs/lab-0X/install.sh aplica las soluciones previas automáticamente!
 
-> **Cada laboratorio incluye README.es.md, PROMPTS.es.md (prompts optimizados), install.sh y verify.sh.**
+> **Cada laboratorio incluye LAB_0X_INSTRUCTIONS_ES.pdf, README.es.md, PROMPTS.es.md, install.sh y verify.sh.**
 
-<!-- Speaker Notes: Explica la agenda de 4 horas y cómo los participantes usarán Antigravity con los prompts optimizados de PROMPTS.es.md. -->
+<!-- Speaker Notes: Explica la agenda de 4 horas y cómo los participantes usarán Antigravity con los prompts optimizados de PROMPTS.es.md y las guías en PDF. -->
 
 ---
 
@@ -87,22 +87,46 @@ color: #f0f6fc
 ---
 
 ![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
-##### LABORATORIO PRÁCTICO 1 (52 MINUTOS) • TRIAGE Y RECUPERACIÓN
-# Lab 1: Diagnóstico de Causa Raíz y Recuperación de Ingresos/Márgenes
-**Usa Antigravity (/plan, @menciones, Cmd+I, pytest) para corregir dos bugs críticos en producción**
+##### LABORATORIO PRÁCTICO 1 (PARTE 1/2) • OBJETIVOS Y QUÉ CONSTRUIRÁS
+# Lab 1: Triage de SLA 5G y Facturación CDR — Objetivos y Arquitectura
+**52 Minutos • Guía PDF Imprimible: labs/lab-01-revenue-sla-triage/LAB_01_INSTRUCTIONS_ES.pdf**
 
 ![Architecture Diagram](../assets/telecom_domain_es.png)
 
-### Guía del Lab 1 y Prompts Optimizados
-- Setup: Ejecuta ./labs/lab-01-revenue-sla-triage/install.sh y abre http://localhost:8001
-- Bug #1 (Fuga de Ingresos BSS): src/services/cdr_rating.py usa 1000^3 en vez de 1024^3 GiB y omite el multiplicador 1.50x de roaming NR_5G ($54,672.22 perdidos)
-- Bug #2 (Riesgo SLA OSS/BSS): src/services/sla_monitor.py invierte la latencia (< vs >) e incluye el contrato SUSPENDED CTR-B2B-1007 ($35K de falsa alerta)
-- Prompt 1 (/plan): '/plan Analiza @src/services/cdr_rating.py, @src/services/sla_monitor.py y @tests/test_lab01_triage.py para diagnosticar los bugs de ingresos y SLA'
-- Prompt 2 (Cmd+I y Fix): Usa Cmd+I en línea para corregir con Decimal y ejecuta ./labs/lab-01-revenue-sla-triage/verify.sh
+### Objetivos del Lab 1 y Qué Construirás
+- Objetivo 1 (Triage Agéntico Multi-Archivo): Dominar `@menciones`, `/plan` y edición en línea `Cmd/Ctrl+I` en Antigravity correlacionando alarmas RAN (`ran_alarms.jsonl`) con código BSS.
+- Objetivo 2 (Aseguramiento de Ingresos y SLA): Recuperar `$54,672.22 USD` en CDRs 5G subfacturados y eliminar `$35,000 USD` en falsas alertas SLA sobre contratos no activos.
+- Qué Construirás #1 (Motor de Tasación TAP3 3GPP): Refactorizarás `src/services/cdr_rating.py` imponiendo GiB binario (`Decimal(1024 ** 3)`) y recargo de roaming en toda red visitada (`NR_5G` y `EUTRAN_4G`).
+- Qué Construirás #2 (Monitor de SLA B2B): Refactorizarás `src/services/sla_monitor.py` filtrando `WHERE status = 'ACTIVE'` y evaluando `worst_latency > committed_latency`.
+- Entregable y Verificación: Pasar los 5 tests en `tests/test_lab01_triage.py` (`./labs/lab-01-revenue-sla-triage/verify.sh`) y validar KPIs en `http://localhost:8001`.
 
-> **Abre PROMPTS.es.md dentro de labs/lab-01-* para copiar prompts optimizados de Diagnóstico, /plan, Cmd+I y Verificación.**
+> **Impartido por Tryolabs • Guía imprimible completa: LAB_01_INSTRUCTIONS_ES.pdf**
 
-<!-- Speaker Notes: Inicia el Lab 1. Pide a los asistentes ejecutar install.sh, abrir el dashboard web local y usar los prompts de PROMPTS.es.md. -->
+<!-- Speaker Notes: Revisa los Objetivos del Lab 1 y los dos servicios que los asistentes repararán. -->
+
+---
+
+![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
+##### LABORATORIO PRÁCTICO 1 (PARTE 2/2) • INSTRUCCIONES PASO A PASO Y PROMPTS
+# Instrucciones del Lab 1 y Prompts para Copiar y Pegar
+**Sigue los Pasos 1–5 a la izquierda y copia los prompts desde labs/lab-01-revenue-sla-triage/PROMPTS.es.md**
+
+### Instrucciones Paso a Paso del Lab 1
+- Paso 1 (Inicializar Lab 01): Ejecuta `./labs/lab-01-revenue-sla-triage/install.sh` para poblar `data/telecom_nexus.db`.
+- Paso 2 (Reproducir Fallos): Ejecuta `./.venv/bin/pytest tests/test_lab01_triage.py` para observar los fallos de CDR y SLA.
+- Paso 3 (Corregir `src/services/cdr_rating.py`): Usa `BYTES_DIVISOR = Decimal(1024 ** 3)` (GiB binario según 3GPP TS 32.298) y aplica `roaming_markup` cuando `roaming_plmn != HOME_PLMN`.
+- Paso 4 (Corregir `src/services/sla_monitor.py`): Filtra `WHERE status = 'ACTIVE'` y cambia `latency_breach` a `worst_latency > committed_latency`.
+- Paso 5 (Verificar): Ejecuta `./labs/lab-01-revenue-sla-triage/verify.sh` (`5 passed`: `$54,672.22` recuperados; 5 contratos `ACTIVE` en alerta = `$224,500.00`).
+
+### Prompts Optimizados (PROMPTS.es.md) y Verificación
+- Prompt 1 — Diagnóstico (@Menciones): '@data/logs/ran_alarms.jsonl @src/services/cdr_rating.py @src/services/sla_monitor.py @tests/test_lab01_triage.py Ejecuta pytest para reproducir ALM-BSS-8006 y ALM-3GPP-8001..8005 y explica la causa raíz exacta.'
+- Prompt 2 — Planificación (/plan): '/plan Crea un plan paso a paso para corregir cdr_rating.py (GiB 1024**3 y roaming NR_5G) y sla_monitor.py (contratos ACTIVE y worst_latency > committed_latency).'
+- Prompt 3 — Edición en Línea (Cmd+I): Selecciona líneas 19–48 en `cdr_rating.py` -> 'Usa Decimal(1024**3) y aplica recargo roaming a todo visiting_plmn != HOME_PLMN incluyendo NR_5G.'
+- Prompt 4 — Verificación Autónoma: 'Aplica las correcciones en @src/services/cdr_rating.py y @src/services/sla_monitor.py y ejecuta ./labs/lab-01-revenue-sla-triage/verify.sh.'
+
+> **Impartido por Tryolabs • Solución de Referencia: ./labs/lab-01-revenue-sla-triage/apply_solution.sh**
+
+<!-- Speaker Notes: Mantén esta diapositiva proyectada durante el Lab 1. -->
 
 ---
 
@@ -126,22 +150,46 @@ color: #f0f6fc
 ---
 
 ![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
-##### LABORATORIO PRÁCTICO 2 (54 MINUTOS) • CEREBRO DE DOMINIO
-# Lab 2: Reglas de Industria y Skill de Auditoría Ejecutiva
-**Enseña a Antigravity los estándares de tu industria y construye un Auditor Técnico + Comercial**
+##### LABORATORIO PRÁCTICO 2 (PARTE 1/2) • OBJETIVOS Y QUÉ CONSTRUIRÁS
+# Lab 2: Rules de Workspace y Skills Progresivos — Objetivos y Diseño
+**54 Minutos • Guía PDF Imprimible: labs/lab-02-rules-and-skills/LAB_02_INSTRUCTIONS_ES.pdf**
 
 ![Architecture Diagram](../assets/customizations_es.png)
 
-### Guía del Lab 2 y Prompts Optimizados
-- Setup: Ejecuta ./labs/lab-02-rules-and-skills/install.sh (aplica la solución del Lab 1 automáticamente)
-- Tarea 1 (Reglas de Workspace): Crea GEMINI.md y .agents/rules/telecom-standards.md imponiendo Decimal(0.01), validación 3GPP S-NSSAI SST {1,2,3} y esquemas TMF622
-- Tarea 2 (Skill Progresivo): Crea .agents/skills/sla-revenue-audit/SKILL.md con frontmatter YAML y procedimiento de auditoría ejecutiva
-- Prompt Optimizado: 'Crea @GEMINI.md, @.agents/rules/telecom-standards.md y @.agents/skills/sla-revenue-audit/SKILL.md, y ejecuta @scripts/run_sla_audit.py'
-- Verificación: Ejecuta ./labs/lab-02-rules-and-skills/verify.sh y prueba /learn para persistir reglas
+### Objetivos del Lab 2 y Qué Construirás
+- Objetivo 1 (Reglas Jerárquicas de Dominio): Codificar invariantes permanentes 3GPP, TAP3, TMF622 y privacidad CPNI para que Antigravity las respete siempre.
+- Objetivo 2 (Skills con Divulgación Progresiva): Empaquetar una auditoría ejecutiva en `.agents/skills/` cargando solo el frontmatter YAML hasta su activación.
+- Qué Construirás #1 (`GEMINI.md` y `.agents/rules/telecom-standards.md`): Memoria y reglas del workspace exigiendo `Decimal(ROUND_HALF_UP)`, GiB binario (`1024**3`), `PRB < 80%` y máscara CPNI `IMSI`/`MSISDN`.
+- Qué Construirás #2 (`.agents/skills/sla-revenue-audit/SKILL.md`): Skill progresivo (`name: sla-revenue-audit`) que ejecuta `scripts/run_sla_audit.py`.
+- Entregable y Verificación: Generar `data/exports/sla_revenue_audit_report.json` y `.md` y pasar los 4 tests de `./labs/lab-02-rules-and-skills/verify.sh`.
 
-> **Abre labs/lab-02-rules-and-skills/PROMPTS.es.md para seguir los prompts paso a paso.**
+> **Impartido por Tryolabs • Guía imprimible completa: LAB_02_INSTRUCTIONS_ES.pdf**
 
-<!-- Speaker Notes: Guía a los participantes durante el Lab 2 para crear GEMINI.md, reglas de dominio y su primer Skill ejecutable. -->
+<!-- Speaker Notes: Explica los Objetivos del Lab 2 y los archivos de personalización que construirán. -->
+
+---
+
+![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
+##### LABORATORIO PRÁCTICO 2 (PARTE 2/2) • INSTRUCCIONES PASO A PASO Y PROMPTS
+# Instrucciones del Lab 2 y Prompts para Copiar y Pegar
+**Sigue los Pasos 1–5 a la izquierda y copia los prompts desde labs/lab-02-rules-and-skills/PROMPTS.es.md**
+
+### Instrucciones Paso a Paso del Lab 2
+- Paso 1 (Inicializar Lab 02): Ejecuta `./labs/lab-02-rules-and-skills/install.sh` (aplica Lab 01 automáticamente).
+- Paso 2 (Crear `GEMINI.md` en la raíz): Define tablas OSS/BSS (`ran_telemetry`, `b2b_contracts`, `cdr_records`), `Decimal(ROUND_HALF_UP)` y GiB binario (`1024 ** 3`).
+- Paso 3 (Crear `.agents/rules/telecom-standards.md`): Codifica estándares 3GPP TS 28.552 (`PRB < 80%`), roaming TAP3 `NR_5G`, estados TMF622 y enmascaramiento CPNI de `IMSI`/`MSISDN`.
+- Paso 4 (Crear `.agents/skills/sla-revenue-audit/SKILL.md`): Incluye frontmatter YAML (`name: sla-revenue-audit`, `description: ...`) e instrucciones para correr `./.venv/bin/python scripts/run_sla_audit.py`.
+- Paso 5 (Verificar): Ejecuta `./labs/lab-02-rules-and-skills/verify.sh` (`4 passed` + reportes JSON y Markdown).
+
+### Prompts Optimizados (PROMPTS.es.md) y Verificación
+- Prompt 1 — Crear Rules de Dominio: '/plan Crea @GEMINI.md y @.agents/rules/telecom-standards.md codificando umbrales 3GPP TS 28.552, GiB binario (1024**3), Decimal ROUND_HALF_UP, estados TMF622 y privacidad CPNI.'
+- Prompt 2 — Crear Skill Progresivo: 'Crea @.agents/skills/sla-revenue-audit/SKILL.md con frontmatter YAML (name: sla-revenue-audit) que ejecute ./scripts/run_sla_audit.py y genere data/exports/sla_revenue_audit_report.json y .md.'
+- Prompt 3 — Invocar el Skill: 'Ejecuta una auditoría ejecutiva de SLA de Slices 5G y aseguramiento de ingresos CDR usando nuestro skill del workspace.'
+- Comando de Verificación: Ejecuta `./labs/lab-02-rules-and-skills/verify.sh` y prueba `/learn`.
+
+> **Impartido por Tryolabs • Solución de Referencia: ./labs/lab-02-rules-and-skills/apply_solution.sh**
+
+<!-- Speaker Notes: Mantén esta diapositiva en pantalla durante el Lab 2. -->
 
 ---
 
@@ -165,22 +213,46 @@ color: #f0f6fc
 ---
 
 ![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
-##### LABORATORIO PRÁCTICO 3 (55 MINUTOS) • SERVIDOR MCP Y HOOKS
-# Lab 3: Servidor FastMCP Local y Guardarraíles de Cumplimiento
-**Conecta Antigravity a bases de datos en vivo con protección determinista PreToolUse**
+##### LABORATORIO PRÁCTICO 3 (PARTE 1/2) • OBJETIVOS Y QUÉ CONSTRUIRÁS
+# Lab 3: Servidor FastMCP y Hooks Deterministas — Objetivos y Diseño
+**55 Minutos • Guía PDF Imprimible: labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_ES.pdf**
 
 ![Architecture Diagram](../assets/governance_es.png)
 
-### Guía del Lab 3 y Prompts Optimizados
-- Setup: Ejecuta ./labs/lab-03-mcp-and-hooks/install.sh
-- Tarea 1 (Servidor FastMCP): Implementa herramientas en @mcp_server/telecom_mcp.py (query_ran_cell_health, calculate_contract_penalty_exposure, inspect_unbilled_cdrs, evaluate_slice_capacity)
-- Tarea 2 (MCP y Hook Determinista): Configura .agents/mcp_config.json y .agents/hooks.json (ejecuta @scripts/audit_hook.py bloqueando SQL destructivo con código 2 y registrando auditoría SOX/CPNI)
-- Prompt Optimizado: 'Completa @mcp_server/telecom_mcp.py, registra @.agents/mcp_config.json y @.agents/hooks.json, y consulta la exposición SLA en vivo vía MCP'
-- Verificación: Ejecuta ./labs/lab-03-mcp-and-hooks/verify.sh y revisa data/logs/hook_audit.log
+### Objetivos del Lab 3 y Qué Construirás
+- Objetivo 1 (Conexión a Datos en Vivo vía MCP): Exponer herramientas SQLite OSS/BSS tipadas a Antigravity mediante un servidor `FastMCP`.
+- Objetivo 2 (Seguridad Determinista y Privacidad CPNI): Enmascarar `IMSI`/`MSISDN` (`3104***0001`) y bloquear SQL destructivo (`DROP`/`DELETE`) con código de salida `2` mediante hooks `PreToolUse`.
+- Qué Construirás #1 (`mcp_server/telecom_mcp.py` y `.agents/mcp_config.json`): 4 herramientas `@mcp.tool()` (`query_ran_cell_health`, `calculate_contract_penalty_exposure`, `inspect_unbilled_cdrs`, `evaluate_slice_capacity`).
+- Qué Construirás #2 (`.agents/hooks.json` y `scripts/audit_hook.py`): Compuerta determinista `PreToolUse` y `PostToolUse` que bloquea violaciones con código `2` y audita en `data/logs/hook_audit.log`.
+- Entregable y Verificación: Pasar los 6 tests de MCP y Hooks en `./labs/lab-03-mcp-and-hooks/verify.sh`.
 
-> **Abre labs/lab-03-mcp-and-hooks/PROMPTS.es.md para copiar los prompts de construcción y prueba de MCP y Hooks.**
+> **Impartido por Tryolabs • Guía imprimible completa: LAB_03_INSTRUCTIONS_ES.pdf**
 
-<!-- Speaker Notes: Los asistentes implementan su servidor FastMCP, configuran mcp_config.json y hooks.json, y verifican el bloqueo determinista de violaciones. -->
+<!-- Speaker Notes: Revisa los Objetivos del Lab 3 y los componentes FastMCP + Hooks que construirán. -->
+
+---
+
+![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
+##### LABORATORIO PRÁCTICO 3 (PARTE 2/2) • INSTRUCCIONES PASO A PASO Y PROMPTS
+# Instrucciones del Lab 3 y Prompts para Copiar y Pegar
+**Sigue los Pasos 1–5 a la izquierda y copia los prompts desde labs/lab-03-mcp-and-hooks/PROMPTS.es.md**
+
+### Instrucciones Paso a Paso del Lab 3
+- Paso 1 (Inicializar Lab 03): Ejecuta `./labs/lab-03-mcp-and-hooks/install.sh` (aplica Labs 01–02 automáticamente).
+- Paso 2 (Completar `mcp_server/telecom_mcp.py`): Implementa `calculate_contract_penalty_exposure`, `inspect_unbilled_cdrs` (enmascarando `imsi`/`msisdn` con `_mask_cpni`) y `evaluate_slice_capacity`.
+- Paso 3 (Registrar `.agents/mcp_config.json`): Configura `telecom-nexus-mcp` invocando `./.venv/bin/python mcp_server/telecom_mcp.py`.
+- Paso 4 (Configurar `.agents/hooks.json`): Conecta `PreToolUse` y `PostToolUse` a `scripts/audit_hook.py` (bloquea `DROP`/`TRUNCATE`/`DELETE` con código `2`).
+- Paso 5 (Verificar): Ejecuta `./labs/lab-03-mcp-and-hooks/verify.sh` (`6 passed` + bitácora de auditoría).
+
+### Prompts Optimizados (PROMPTS.es.md) y Verificación
+- Prompt 1 — Completar Servidor FastMCP: '/plan Implementa las 3 funciones @mcp.tool() restantes en @mcp_server/telecom_mcp.py (calculate_contract_penalty_exposure, inspect_unbilled_cdrs con máscara CPNI y evaluate_slice_capacity) según @tests/test_lab03_mcp_hooks.py.'
+- Prompt 2 — Configurar MCP y Hooks: 'Crea @.agents/mcp_config.json para telecom-nexus-mcp y @.agents/hooks.json conectando PreToolUse y PostToolUse a ./scripts/audit_hook.py.'
+- Prompt 3 — Probar Bloqueo del Hook (Código 2): Ejecuta `echo '{"command":"sqlite3 data/telecom_nexus.db \"DROP TABLE b2b_contracts;\""}' | ./.venv/bin/python scripts/audit_hook.py --phase pre`
+- Comando de Verificación: Ejecuta `./labs/lab-03-mcp-and-hooks/verify.sh` y revisa `data/logs/hook_audit.log`.
+
+> **Impartido por Tryolabs • Solución de Referencia: ./labs/lab-03-mcp-and-hooks/apply_solution.sh**
+
+<!-- Speaker Notes: Mantén esta diapositiva proyectada durante el Lab 3. -->
 
 ---
 
@@ -205,19 +277,43 @@ color: #f0f6fc
 ---
 
 ![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
-##### LABORATORIO PRÁCTICO 4 CAPSTONE (55 MINUTOS) • ADK, A2A Y DESPLIEGUE CLOUD
-# Lab 4 Capstone: Construye el Sistema Multi-Agente ADK + A2A
-**Usa Antigravity (/grill-me, /boost, Subagentes) para construir, probar en `adk web` y validar Terraform**
+##### LABORATORIO PRÁCTICO 4 CAPSTONE (PARTE 1/2) • OBJETIVOS Y QUÉ CONSTRUIRÁS
+# Lab 4 Capstone: Sistemas Multi-Agente ADK, A2A y Terraform — Objetivos
+**55 Minutos • Guía PDF Imprimible: labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_ES.pdf**
 
 ![Architecture Diagram](../assets/adk_a2a_cloud_es.png)
 
-### Guía del Lab 4 y Prompts Optimizados
-- Setup: Ejecuta ./labs/lab-04-multi-agent-capstone/install.sh
-- Tarea 1 (Jerarquía Google ADK): Implementa @src/agents/adk_a2a_orchestrator.py y @adk_agents/telecom_nexus/agent.py (RANSliceCapacityAgent + BSSCommercialSLAAgent -> TelecomNexusOrchestratorAgent)
-- Tarea 2 (Protocolo A2A): Expón GET /.well-known/agent.json y POST /api/v1/a2a (JSON-RPC 2.0 tasks/send) + rutas de factibilidad TMF622 y remediación de slices
-- Tarea 3 (ADK Dev UI Local): Ejecuta ./scripts/run_adk_web.sh para probar en `adk web` (http://localhost:8080) y corre ./labs/lab-04-multi-agent-capstone/verify.sh
-- Tarea 4 (Terraform y Gemini Enterprise): Valida con ./deploy/deploy_gcp.sh --dry-run, despliega a Cloud Run con Terraform y registra en Gemini Enterprise con ./deploy/register_gemini_enterprise_agent.sh
+### Objetivos del Lab 4 y Qué Construirás
+- Objetivo 1 (Diseño Multi-Agente con Google ADK y A2A): Construir una jerarquía coordinador + especialistas usando Google ADK (`LlmAgent`) y exponerla mediante el protocolo A2A JSON-RPC 2.0.
+- Objetivo 2 (Prueba Local en `adk web` y Despliegue Cloud con Terraform): Probar trazas multi-agente en `adk web` (`http://localhost:8080`) y aprovisionar Cloud Run + Gemini Enterprise vía Terraform.
+- Qué Construirás #1 (`src/services/order_feasibility.py`): Evaluador de factibilidad TMF622 (`PRB < 80%`) y motor autónomo de balanceo hacia celdas vecinas (`remediate_slice_for_order`).
+- Qué Construirás #2 (`src/agents/adk_a2a_orchestrator.py` y `adk_agents/telecom_nexus/`): `RANSliceCapacityAgent` + `BSSCommercialSLAAgent` coordinados por `TelecomNexusOrchestratorAgent`, más `GET /.well-known/agent.json` y `POST /api/v1/a2a`.
+- Qué Construirás #3 (Infraestructura Cloud): Validar `infra/terraform/main.tf` y el registro en Gemini Enterprise con `./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run`.
 
-> **¡Felicidades! Ejecuta ./labs/lab-04-multi-agent-capstone/verify.sh para validar el 100% de la suite de pruebas.**
+> **Impartido por Tryolabs • Guía imprimible completa: LAB_04_INSTRUCTIONS_ES.pdf**
 
-<!-- Speaker Notes: Guía a los participantes en el Capstone final: pruebas en el dashboard web, en la interfaz interactiva ADK Dev UI (`./scripts/run_adk_web.sh`) y validación de despliegue Terraform (`./deploy/deploy_gcp.sh --dry-run`). -->
+<!-- Speaker Notes: Presenta los Objetivos del Lab 4 Capstone y los 3 componentes que construirán. -->
+
+---
+
+![Tryolabs Logo](../assets/tryolabs-logo-dark-bg.png)
+##### LABORATORIO PRÁCTICO 4 CAPSTONE (PARTE 2/2) • INSTRUCCIONES PASO A PASO Y PROMPTS
+# Instrucciones del Lab 4, Prueba en `adk web` y Despliegue Terraform
+**Sigue los Pasos 1–5 a la izquierda y copia los prompts desde labs/lab-04-multi-agent-capstone/PROMPTS.es.md**
+
+### Instrucciones Paso a Paso del Lab 4
+- Paso 1 (Inicializar Lab 04): Ejecuta `./labs/lab-04-multi-agent-capstone/install.sh`.
+- Paso 2 (Motor de Factibilidad TMF622): Implementa `evaluate_order_feasibility()` y `remediate_slice_for_order()` en `src/services/order_feasibility.py` (balanceo PRB hacia celdas vecinas).
+- Paso 3 (Orquestador Google ADK y A2A): Completa `src/agents/adk_a2a_orchestrator.py` (`RANSliceCapacityAgent`, `BSSCommercialSLAAgent`, `TelecomNexusOrchestratorAgent`, `GET /.well-known/agent.json`, `POST /api/v1/a2a`).
+- Paso 4 (Interfaz Local `adk web`): Ejecuta `./scripts/run_adk_web.sh` y prueba `telecom_nexus` en `http://localhost:8080`.
+- Paso 5 (Terraform y Verificación Total): Ejecuta `./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run` y `./labs/lab-04-multi-agent-capstone/verify.sh` (**¡21/21 tests pasando!**).
+
+### Prompts Optimizados, `adk web` y Comandos Cloud
+- Prompt 1 — Motor de Factibilidad: '/plan Implementa evaluate_order_feasibility y remediate_slice_for_order en @src/services/order_feasibility.py según 3GPP TS 28.552 PRB < 80% y desvío a celda vecina.'
+- Prompt 2 — Orquestador ADK + A2A: '/teamwork Implementa RANSliceCapacityAgent, BSSCommercialSLAAgent, TelecomNexusOrchestratorAgent, get_a2a_agent_card y handle_a2a_jsonrpc_request en @src/agents/adk_a2a_orchestrator.py.'
+- Prompt 3 — Interactivo en `adk web` (http://localhost:8080): 'Evalúa la orden ORD-TMF622-9001, ejecuta remediación autónoma de slice 5G y calcula el ACV protegido.'
+- Despliegue y Verificación: Ejecuta `./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run` y `./labs/lab-04-multi-agent-capstone/verify.sh`.
+
+> **Impartido por Tryolabs • Solución de Referencia: ./labs/lab-04-multi-agent-capstone/apply_solution.sh**
+
+<!-- Speaker Notes: Mantén esta diapositiva proyectada durante el Lab 4 Capstone. -->

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="180" />
+</p>
+
 # Lab 01: Triage de SLA en Slices 5G y Aseguramiento de Ingresos (CDR)
 
 **Duración**: 45 minutos  
