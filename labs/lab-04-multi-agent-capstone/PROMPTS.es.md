@@ -1,64 +1,77 @@
-# Lab 04 — Guía de Prompts Optimizados para Antigravity (Español)
+# Prompts de Antigravity del Laboratorio 04: Multi-Agente ADK, Protocolo A2A, ADK Dev UI y Gemini Enterprise
 
-> **Objetivo**: Utilizar la **Orquestación Multi-Agente de Google Antigravity** (`/teamwork`, `/boost`, `/plan`, Subagentes e inspección del Panel Auxiliar) para construir el **Motor de Factibilidad de Órdenes B2B TMF622 y Remediación de QoS en Slices 5G** en `src/services/order_feasibility.py` y verificarlo mediante los endpoints FastAPI (`/api/v1/orders/feasibility-check` y `/api/v1/slices/remediate`).
+[English](PROMPTS.md) | **Español** | [Guía del Laboratorio 04](README.es.md)
 
 ---
 
-## 1. Prompt de Descubrimiento y Contexto (`@` Mentions)
+## Prompt 1: Implementar Factibilidad de Órdenes TMF622 y Remediación Autónoma de Slices 5G
+
+> Copie y pegue este prompt en Google Antigravity (también puede anteponer `/plan` para planificación arquitectónica paso a paso):
 
 ```text
-@src/services/order_feasibility.py @src/main.py @src/models.py @tests/test_lab04_capstone.py @GEMINI.md @.agents/rules/telecom-standards.md
-Necesitamos implementar nuestro servicio Capstone de Factibilidad de Órdenes de Venta B2B TMF622 y Remediación de QoS en Slices 5G en `src/services/order_feasibility.py`.
-Inspecciona el esquema de datos en `data/seed_telecom_data.py` (`tmf622_sales_orders`, `ran_telemetry`, `b2b_contracts`), los endpoints en `src/main.py` y los requisitos exactos de prueba en `tests/test_lab04_capstone.py`.
+Inspecciona `src/services/order_feasibility.py`, `src/models.py` y `tests/test_lab04_capstone.py`.
+
+Implementa `evaluate_order_feasibility(order_id)` y `remediate_slice_for_order(order_id, steering_mode)` en `src/services/order_feasibility.py` siguiendo todas las reglas de `GEMINI.md` y `.agents/rules/telecom-standards.md`:
+
+1. En `evaluate_order_feasibility(order_id)`:
+   - Consulta `sales_orders` por `order_id` (lanza `ValueError` si no existe).
+   - Consulta `ran_telemetry` para las celdas que coincidan con `tac = target_tac` y `s_nssai_sst = requested_slice_sst`.
+   - Una celda es factible si `prb_utilization_pct < 80.0`, `pdcp_latency_ms <= max_latency_ms` y `available_bandwidth_mbps >= requested_bandwidth_mbps`.
+   - Si una celda congestionada (`prb_utilization_pct >= 80.0` o `pdcp_latency_ms > max_latency_ms`) tiene una celda vecina factible en `neighbor_cells`, devuelve `feasibility_status = "REQUIRES_SLICE_REMEDIATION"`, `requires_remediation = True`, `congested_cell_id` y `recommended_cell_id` (la celda vecina).
+   - De lo contrario, si existe una celda factible sin congestión, devuelve `feasibility_status = "READY_TO_ACTIVATE"`, `requires_remediation = False` y `recommended_cell_id`.
+   - Si ninguna celda puede satisfacer los requisitos de ancho de banda/latencia, devuelve `feasibility_status = "REJECTED"`.
+   - Calcula `protected_annual_revenue_usd` como `monthly_recurring_revenue_usd * 12` usando `Decimal`.
+
+2. En `remediate_slice_for_order(order_id, steering_mode)`:
+   - Verifica que la orden esté actualmente en estado `REQUIRES_SLICE_REMEDIATION` (de lo contrario lanza `ValueError`).
+   - Descarga tráfico de la celda congestionada hacia la celda vecina objetivo en `ran_telemetry` (reduciendo `prb_utilization_pct` de la celda congestionada a `58.5%`, reduciendo su `pdcp_latency_ms` y actualizando `sales_orders.status = 'READY_TO_ACTIVATE'` y `sales_stage = 'PROVISIONED'`).
+   - Devuelve el resumen de remediación incluyendo `protected_annual_revenue_usd` (`MRR * 12`), `avoided_sla_penalty_usd` (`MRR * 2`) y `total_commercial_value_preserved_usd` (`MRR * 14`).
 ```
 
 ---
 
-## 2. Prompt de Orquestación Multi-Agente (`/teamwork`)
+## Prompt 2: Diseñar el Sistema Multi-Agente Google ADK y los Endpoints del Protocolo A2A
 
-Usa `/teamwork` para lanzar subagentes especializados en paralelo (un **Arquitecto 3GPP RAN Slice**, un **Ingeniero Comercial BSS TMF622** y un **Subagente de Verificación QA**):
+> Copie y pegue este prompt en Google Antigravity (o use `/teamwork` para coordinar el diseño de los agentes OSS y BSS):
 
 ```text
-/teamwork Coordina un equipo de subagentes para implementar y verificar el Capstone del Lab 04 en `src/services/order_feasibility.py`:
-1. Agente 1 (Factibilidad 3GPP RAN Slice): Implementa `evaluate_order_feasibility(order_id, db_path)` evaluando las celdas candidatas en `ran_telemetry` para `target_tac` y `requested_slice_sst`. Clasifica una celda como factible cuando `prb_utilization_pct < 80.0`, `pdcp_latency_ms <= max_latency_ms` y `available_bandwidth_mbps >= requested_bandwidth_mbps`. Retorna `READY_TO_ACTIVATE` (todas las celdas del slice saludables y factibles), `REQUIRES_SLICE_REMEDIATION` (al menos una celda congestionada o incumpliendo latencia, pero existe una celda vecina factible en el mismo TAC+SST) o `REJECTED` (ninguna celda cumple), actualizando `tmf622_sales_orders.order_status`.
-2. Agente 2 (Remediación Comercial e Impacto Decimal): Implementa `remediate_slice_for_order(order_id, steering_mode, db_path)` que lance `ValueError` si la orden es `REJECTED`, actualice la celda congestionada en `ran_telemetry` a `HEALTHY` (`prb_utilization_pct = 64.0`, `pdcp_latency_ms = round(max_latency_ms * 0.75, 2)`, `availability_pct = 99.995`), actualice la orden en `tmf622_sales_orders` a `order_status = 'READY_TO_ACTIVATE'` y `sales_stage = 'PROVISIONED'`, y calcule `protected_annual_revenue_usd` (`estimated_mrr_usd * 12`), `avoided_sla_penalty_usd` (`sla_penalty_per_hour_usd * breach_hours_mtd`) y `total_commercial_value_preserved_usd` usando `Decimal`.
-3. Agente 3 (Verificación QA Integral): Ejecuta `./labs/lab-04-multi-agent-capstone/verify.sh` y confirma que las 4 suites de pruebas pasen al 100%.
+Inspecciona `src/agents/adk_a2a_orchestrator.py`, `adk_agents/telecom_nexus/agent.py`, `src/main.py` y `tests/test_lab04_capstone.py`.
+
+Completa `src/agents/adk_a2a_orchestrator.py` para implementar nuestro Sistema Multi-Agente con Google ADK y el servidor del Protocolo A2A (Agent2Agent):
+
+1. `RANSliceCapacityAgent`:
+   - Implementa `assess_order_ran_slice(order_id, auto_remediate=False)` usando `evaluate_order_feasibility` y (cuando `auto_remediate=True` y el estado sea `REQUIRES_SLICE_REMEDIATION`) `remediate_slice_for_order`.
+   - Devuelve `agent_name = "ran_slice_capacity_agent"`, `initial_feasibility_status`, `final_feasibility_status`, `target_tac`, `recommended_cell_id` y `auto_remediation_executed`.
+
+2. `BSSCommercialSLAAgent`:
+   - Implementa `assess_commercial_impact(order_id, oss_result)` consultando `sales_orders`, `evaluate_contract_sla_compliance()` y `audit_cdr_revenue_leakage()`.
+   - Calcula `annual_contract_value_usd` (`MRR * 12`) y `avoided_sla_penalty_risk_usd` (`MRR * 2`) con `Decimal`.
+   - Asigna `final_feasibility_status` a `commercial_decision`:
+     - `READY_TO_ACTIVATE` -> `APPROVE_IMMEDIATELY`
+     - `REQUIRES_SLICE_REMEDIATION` -> `APPROVE_WITH_AUTOMATED_RAN_STEERING`
+     - `REJECTED` -> `HOLD_REQUIRES_RAN_CAPACITY_CAPEX`
+
+3. `TelecomNexusOrchestratorAgent`:
+   - Coordina `RANSliceCapacityAgent` (Paso 1) y `BSSCommercialSLAAgent` (Paso 2) usando Google ADK (jerarquía `SequentialAgent` / `LlmAgent` de `google-adk` con ejecución local determinista).
+   - Devuelve `orchestrator_name`, `adk_architecture`, `oss_technical_assessment`, `bss_commercial_assessment`, `executive_decision` y `agent_trace`.
+
+4. Integración del Protocolo A2A:
+   - Implementa `get_a2a_agent_card(base_url)` devolviendo la Agent Card para `TelecomNexus-OSS-BSS-Orchestrator` con las habilidades (`skills`) `tmf622_order_feasibility`, `autonomous_slice_remediation` y `sla_revenue_assurance`.
+   - Implementa `handle_a2a_jsonrpc_request(payload)` soportando JSON-RPC 2.0 `"tasks/send"` y `"message/send"`, extrayendo `order_id` y `auto_remediate` de las partes del mensaje A2A y devolviendo una Tarea A2A completada con `status.state = "completed"` y `artifacts`.
+
+Finalmente, ejecuta `./.venv/bin/pytest tests/test_lab04_capstone.py -v` y `./scripts/run_adk_web.sh --check` para verificar que todas las pruebas pasen.
 ```
 
 ---
 
-## 3. Prompt de Razonamiento Estratégico Profundo (`/boost`)
-
-Alternativamente, usa `/boost` para razonamiento profundo multi-perspectiva:
+## Prompt 3: Probar con ADK Web UI (`adk web`) y Validar el Despliegue en Terraform + Gemini Enterprise
 
 ```text
-/boost Diseña, implementa y verifica rigurosamente `evaluate_order_feasibility` y `remediate_slice_for_order` en @src/services/order_feasibility.py para que `POST /api/v1/orders/feasibility-check` y `POST /api/v1/slices/remediate` cumplan todas las reglas 3GPP TS 28.552, TMF622 y `Decimal` en @tests/test_lab04_capstone.py.
-```
+1. Valida el paquete de agentes para ADK Web UI (`adk_agents/telecom_nexus/agent.py`) y la configuración de Discovery Engine para Gemini Enterprise ejecutando:
+   ./scripts/run_adk_web.sh --check
 
----
+2. Valida nuestro Dockerfile, la infraestructura de Terraform (`infra/terraform/`) y el payload de registro del agente A2A en Gemini Enterprise (`deploy/register_gemini_enterprise_agent.sh`) en modo dry-run local:
+   ./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run
 
-## 4. Prompt de Edición Inline (`Cmd+I` / `Ctrl+I`)
-
-Dentro de `src/services/order_feasibility.py`, selecciona `evaluate_order_feasibility` y `remediate_slice_for_order` y presiona `Cmd+I` / `Ctrl+I`:
-
-```text
-Implementa `evaluate_order_feasibility` y `remediate_slice_for_order` usando `fetch_one`, `fetch_all` y `execute_write` de `src.database` y `Decimal` (`ROUND_HALF_UP`) para que pasen todas las pruebas en `tests/test_lab04_capstone.py`.
-```
-
----
-
-## 5. Prompt de Automatización de Navegador en el Dashboard NOC (`/browser`)
-
-Una vez que `./labs/lab-04-multi-agent-capstone/verify.sh` pase:
-
-```text
-/browser Inicia el servidor FastAPI de Telecom Nexus en el puerto 8001, abre `http://localhost:8001`, haz clic en "Check Feasibility" y "Remediate Slice" en la orden `ORD-TMF622-9001` (Goldman Sachs Low-Latency Trading Backup), y confirma que la orden pase a `READY_TO_ACTIVATE` preservando $600,000.00 en valor comercial total ($504,000.00 ARR + $96,000.00 en penalidades SLA evitadas).
-```
-
----
-
-## 6. Prompt de Ejecución Autónoma Prolongada (`/goal`)
-
-```text
-/goal Evalúa la factibilidad de las 15 órdenes de venta B2B TMF622 en `telecom_nexus.db`, remedia automáticamente cada orden con estado `REQUIRES_SLICE_REMEDIATION`, vuelve a ejecutar la auditoría ejecutiva (`scripts/run_sla_audit.py`) y no te detengas hasta que las 5 celdas 5G RAN congestionadas queden en estado `HEALTHY` y las 4 suites de pytest pasen.
+3. Ejecuta `./labs/lab-04-multi-agent-capstone/verify.sh` para confirmar que las 21 pruebas de los Laboratorios 01, 02, 03 y 04 pasan al 100%.
 ```

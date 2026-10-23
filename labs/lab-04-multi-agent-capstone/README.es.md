@@ -1,60 +1,117 @@
-# Lab 04: Capstone Multi-Agente — Factibilidad de Órdenes TMF622 y Remediación de Slices 5G
+# Laboratorio 04: Capstone Multi-Agente OSS/BSS — Google ADK, Protocolo A2A, ADK Dev UI (`adk web`), Terraform y Gemini Enterprise
 
-**Duración**: 60 minutos  
-**Impartido por**: **Tryolabs** (Impulsado por Google Antigravity & Gemini Enterprise)  
-**Capacidades de Antigravity Practicadas**: Orquestación Multi-Agente (`/teamwork`, Subagentes), Razonamiento Estratégico Profundo (`/boost`), Ejecución Autónoma de Objetivos (`/goal`), Automatización de Navegador (`/browser`) e Inspección del Panel Auxiliar (Subagents, Background Tasks, Artifacts, Files Changed).
+<p align="center">
+  <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="170" />
+</p>
 
-> 📄 **Archivo de Prompts Rápidos**: Consulta [PROMPTS.es.md](./PROMPTS.es.md) ([English](./PROMPTS.md)) para copiar y pegar los prompts optimizados.
-
----
-
-## 1. Escenario del Capstone
-
-Quince **Órdenes de Venta B2B Empresariales TMF622** (`ORD-TMF622-9001` .. `9015`) esperan en la cola de aprovisionamiento.
-- Algunas órdenes apuntan a códigos de área (`TAC-LAX-004`, `TAC-CHI-002` SST=3) con celdas 5G saludables y pueden activarse de inmediato (`READY_TO_ACTIVATE`).
-- Varias órdenes estratégicas (como `ORD-TMF622-9001` para **Goldman Sachs Low-Latency Trading Backup** en `TAC-NY-001` `SST=2`, con un valor de **$42,000/mes MRR / $504,000 ARR**) están bloqueadas porque el sector primario `CELL-NY-001-B` está congestionado (`88.2%` PRB, `14.8ms` de latencia PDCP frente a `5.0ms` máximo), aunque el sector vecino `CELL-NY-001-C` en el mismo TAC y slice URLLC está saludable (`44.0%` PRB, `3.4ms` de latencia, `448 Mbps` libres).
-- Dos órdenes (`ORD-TMF622-9011` que solicita `950 Mbps @ 1.2ms` y `ORD-TMF622-9014` que solicita `750 Mbps @ 2.0ms`) exceden la capacidad física de la interfaz de radio 5G en todas las celdas de su TAC y deben clasificarse como `REJECTED`.
-
-Tu misión en el Lab 04 es utilizar las **capacidades Multi-Agente de Antigravity** (`/teamwork` o `/boost`) para implementar `evaluate_order_feasibility()` y `remediate_slice_for_order()` en [src/services/order_feasibility.py](../../src/services/order_feasibility.py), habilitando los endpoints FastAPI:
-- `POST /api/v1/orders/feasibility-check`
-- `POST /api/v1/slices/remediate`
+[English](README.md) | **Español** | [Prompts (EN)](PROMPTS.md) | [Prompts (ES)](PROMPTS.es.md)
 
 ---
 
-## 2. Preparación del Laboratorio
+## 1. Escenario Comercial y Técnico de Telecomunicaciones
 
-Ejecuta el instalador del Lab 04 (que aplica automáticamente las soluciones de los Labs 01, 02 y 03):
+La Mesa de Ventas Empresariales B2B tiene **15 órdenes pendientes TM Forum TMF622 de Network Slicing 5G** (`ORD-TMF622-9001` a `ORD-TMF622-9015`) que representan millones en Valor Anual de Contrato (ACV). Antes de aprovisionar un slice en un Código de Área de Seguimiento (TAC), la plataforma debe coordinar **dos dominios especializados de ingeniería de telecomunicaciones**:
 
-```bash
-./labs/lab-04-multi-agent-capstone/install.sh
+1. **Dominio Técnico OSS (`RANSliceCapacityAgent`)**: Evalúa las celdas 5G RAN bajo 3GPP TS 28.552 en el TAC objetivo (`prb_utilization_pct < 80.0`, `pdcp_latency_ms <= max_latency_ms`, `available_bandwidth_mbps >= requested_bandwidth_mbps`). Si la celda primaria está congestionada (`>= 80%` PRB) y existe una celda vecina saludable en `neighbor_cells`, puede ejecutar **remediación autónoma de slice** (direccionamiento de tráfico a celda vecina + reasignación de PRB).
+2. **Dominio Comercial BSS (`BSSCommercialSLAAgent`)**: Cuantifica el Valor Anual de Contrato protegido (`MRR * 12`), la exposición evitada a penalizaciones SLA (`MRR * 2`), los incumplimientos regionales activos de SLA B2B y la fuga de ingresos en CDRs de roaming GSMA TAP3.12.
+
+En este laboratorio capstone, utilizará **Google Antigravity** (y `/plan` o `/teamwork`) para:
+- Implementar el **Motor de Factibilidad de Órdenes TMF622 y Remediación de Slices** (`src/services/order_feasibility.py`).
+- Construir un **Orquestador Multi-Agente con Google ADK (Agent Development Kit)** (`src/agents/adk_a2a_orchestrator.py` y `adk_agents/telecom_nexus/agent.py`) coordinando `RANSliceCapacityAgent` y `BSSCommercialSLAAgent`.
+- Exponer el sistema multi-agente mediante el **Protocolo A2A (Agent2Agent)** (`GET /.well-known/agent.json` Agent Card y `POST /api/v1/a2a` JSON-RPC 2.0 `tasks/send`).
+- Probar su grafo multi-agente de forma interactiva en su laptop usando la **Interfaz de Desarrollo ADK (`adk web`)** (`./scripts/run_adk_web.sh` en `http://localhost:8080`).
+- Validar el despliegue en la nube con **Terraform (`infra/terraform/`)** y registrar el agente A2A en **Google Gemini Enterprise** (`./deploy/deploy_gcp.sh --dry-run`).
+
+---
+
+## 2. Arquitectura Multi-Agente ADK + A2A + Gemini Enterprise
+
+```mermaid
+flowchart LR
+    subgraph CLIENT["Clientes y Portales Empresariales"]
+        GEMINI_ENT["Google Gemini Enterprise<br/>(Discovery Engine Assistant)"]
+        ADK_WEB["ADK Dev UI (`adk web`)<br/>http://localhost:8080"]
+        A2A_PEER["Agente Par Externo A2A<br/>(JSON-RPC 2.0 `tasks/send`)"]
+    end
+
+    subgraph A2A_LAYER["Capa de Protocolo A2A (`src/main.py`)"]
+        CARD["GET /.well-known/agent.json<br/>(Tarjeta de Descubrimiento A2A)"]
+        RPC["POST /api/v1/a2a<br/>(Manejador de Tareas JSON-RPC 2.0)"]
+    end
+
+    subgraph ADK_ORCH["Sistema Multi-Agente Google ADK (`adk_agents/telecom_nexus/`)"]
+        ROOT["root_agent<br/>`TelecomNexusOrchestratorAgent`"]
+        RAN["Subagente 1: `RANSliceCapacityAgent`<br/>(Factibilidad y Direccionamiento RAN 3GPP)"]
+        BSS["Subagente 2: `BSSCommercialSLAAgent`<br/>(Valoración ACV TMF622, SLA y CDRs TAP3)"]
+    end
+
+    GEMINI_ENT & A2A_PEER --> CARD & RPC
+    RPC --> ROOT
+    ADK_WEB --> ROOT
+    ROOT --> RAN
+    ROOT --> BSS
 ```
 
 ---
 
 ## 3. Instrucciones Paso a Paso
 
-### Paso 3.1: Lanzar un Flujo Multi-Agente (`/teamwork` o `/boost`)
-Copia el prompt `/teamwork` o `/boost` desde [PROMPTS.es.md](./PROMPTS.es.md) en Antigravity. Observa el **Panel Auxiliar HTML** en Antigravity 2.0 mientras los subagentes inspeccionan el esquema OSS/BSS, implementan `src/services/order_feasibility.py` y ejecutan las pruebas de verificación.
-
-### Paso 3.2: Verificar las Reglas Técnicas y Comerciales Implementadas
-1. **`evaluate_order_feasibility(order_id, db_path)`**:
-   - Consulta `ran_telemetry` para `tac = target_tac` y `s_nssai_sst = requested_slice_sst`.
-   - Evalúa `prb_utilization_pct < 80.0`, `pdcp_latency_ms <= max_latency_ms` y `available_bandwidth_mbps >= requested_bandwidth_mbps`.
-   - Clasifica la orden como `READY_TO_ACTIVATE`, `REQUIRES_SLICE_REMEDIATION` o `REJECTED` y actualiza `tmf622_sales_orders.order_status`.
-2. **`remediate_slice_for_order(order_id, steering_mode, db_path)`**:
-   - Lanza `ValueError` si la orden es `REJECTED` (lo cual `src/main.py` traduce a HTTP `400`).
-   - Redirige el tráfico del slice y rebalancea el PRB en la celda congestionada (`prb_utilization_pct = 64.0`, `pdcp_latency_ms = round(max_latency_ms * 0.75, 2)`, `availability_pct = 99.995`, `status = 'HEALTHY'`).
-   - Actualiza `tmf622_sales_orders` a `order_status = 'READY_TO_ACTIVATE'` y `sales_stage = 'PROVISIONED'`.
-   - Calcula `protected_annual_revenue_usd`, `avoided_sla_penalty_usd` y `total_commercial_value_preserved_usd` usando `Decimal`.
-
----
-
-## 4. Verificación Completa del Workshop
-
-Ejecuta el script de verificación del Lab 04 (que corre todas las pruebas de los Labs 01, 02, 03 y 04):
+### Paso 1: Inicializar el Estado Inicial del Laboratorio 04
 
 ```bash
-./labs/lab-04-multi-agent-capstone/verify.sh
+./labs/lab-04-multi-agent-capstone/install.sh
 ```
 
-> **¿Necesitas la solución de referencia?** Ejecuta `./labs/lab-04-multi-agent-capstone/apply_solution.sh`.
+Esto asegura que las soluciones de los Laboratorios 01–03 estén activas y establece `src/services/order_feasibility.py` y `src/agents/adk_a2a_orchestrator.py` en sus plantillas iniciales del Laboratorio 04.
+
+### Paso 2: Implementar Factibilidad de Órdenes TMF622 y Direccionamiento Autónomo de Slices
+Abra [PROMPTS.es.md](PROMPTS.es.md) y pegue el **Prompt 1** en Antigravity para implementar `evaluate_order_feasibility()` y `remediate_slice_for_order()` en `src/services/order_feasibility.py`.
+
+### Paso 3: Construir el Orquestador Multi-Agente Google ADK y el Servidor de Protocolo A2A
+Pegue el **Prompt 2** de [PROMPTS.es.md](PROMPTS.es.md) en Antigravity para completar `src/agents/adk_a2a_orchestrator.py`:
+- `RANSliceCapacityAgent.assess_order_ran_slice(order_id, auto_remediate)`
+- `BSSCommercialSLAAgent.assess_commercial_impact(order_id, oss_result)`
+- `TelecomNexusOrchestratorAgent.run_order_assessment(order_id, auto_remediate)`
+- `get_a2a_agent_card(base_url)` (`GET /.well-known/agent.json`)
+- `handle_a2a_jsonrpc_request(payload)` (`POST /api/v1/a2a`)
+
+### Paso 4: Pruebas Locales Interactivas con la Interfaz de Desarrollo ADK (`adk web`)
+Inicie la **Interfaz de Desarrollo de Google ADK** localmente para inspeccionar su `root_agent` (`telecom_nexus`), los subagentes (`ran_slice_capacity_agent`, `bss_commercial_sla_agent`, `a2a_protocol_bridge_agent`), llamadas a herramientas y transiciones de estado:
+
+```bash
+# Validar el paquete de agentes ADK y la configuración de conexión a Gemini Enterprise:
+./scripts/run_adk_web.sh --check
+
+# Iniciar la interfaz interactiva ADK Web UI en http://localhost:8080:
+./scripts/run_adk_web.sh
+```
+
+Dentro de `http://localhost:8080`, seleccione **`telecom_nexus`** en el menú desplegable de agentes y pruebe consultas como:
+- *"Evalúa la orden TMF622 ORD-TMF622-9001 usando el Agente de Capacidad RAN y el Agente Comercial SLA BSS."*
+- *"Ejecuta remediación autónoma de slice 5G para ORD-TMF622-9001 y calcula el Valor Anual de Contrato protegido."*
+- *"Envía una tarea JSON-RPC A2A para ORD-TMF622-9003."*
+
+### Paso 5: Desplegar con Terraform y Registrar en Google Gemini Enterprise
+Revise la configuración de Terraform en `infra/terraform/` (`versions.tf`, `variables.tf`, `main.tf`, `outputs.tf`) y el script de registro A2A en Gemini Enterprise en `deploy/register_gemini_enterprise_agent.sh`.
+
+Ejecute la validación local en modo `dry-run` (sin requerir credenciales activas de GCP):
+```bash
+./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run
+```
+
+Para desplegar en un proyecto real de Google Cloud con Gemini Enterprise:
+```bash
+export GOOGLE_CLOUD_PROJECT="su-proyecto-telecom-gcp"
+export GEMINI_ENTERPRISE_APP_ID="telecom-nexus-enterprise-app"
+./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --project "$GOOGLE_CLOUD_PROJECT" --gemini-app-id "$GEMINI_ENTERPRISE_APP_ID"
+```
+
+### Paso 6: Verificar su Solución del Laboratorio 04
+
+```bash
+# Opcional: Aplicar la solución de referencia
+./labs/lab-04-multi-agent-capstone/apply_solution.sh
+
+# Ejecutar la suite completa de 21 pruebas de verificación de los Labs 01–04
+./labs/lab-04-multi-agent-capstone/verify.sh
+```

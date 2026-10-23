@@ -149,23 +149,27 @@ Explain that static files aren't enough—agents need **live, read-only tool acc
 
 ---
 
-### Module 4: Lab 04 — Multi-Agent OSS/BSS Capstone: TMF622 Order Feasibility & Executive Advisory (30 Mins)
+### Module 4: Lab 04 — Multi-Agent OSS/BSS Capstone: Google ADK, A2A Protocol, `adk web` & Gemini Enterprise (30 Mins)
 
 #### Scene Setting (5 Mins)
-Bring the Technical OSS and Business BSS worlds together. The Enterprise Sales Desk has **8 pending TMF622 B2B 5G Slice Orders** worth millions in annual contract value. Which orders can the 5G RAN safely accept right now, and which ones must be held for RAN capacity expansion?
+Bring the Technical OSS and Business BSS worlds together. The Enterprise Sales Desk has **15 pending TMF622 B2B 5G Slice Orders** worth millions in annual contract value. How do we build a production **Google ADK (Agent Development Kit)** multi-agent system, expose it via the **A2A (Agent2Agent) Protocol**, test it interactively in the **ADK Dev UI (`adk web`)**, and register it into **Google Gemini Enterprise** via **Terraform**?
 
 #### Live Demo Steps (15 Mins)
 1. Prepare the Lab 04 state:
    ```bash
    ./labs/lab-04-multi-agent-capstone/install.sh
    ```
-2. Show the two specialized subagents in `.agents/agents/`:
-   - `ran-oss-investigator.md` (3GPP TS 28.552 RAN capacity & alarm investigator)
-   - `bss-revenue-auditor.md` (TMF622 order feasibility, TAP3.12 CDR leakage & SLA risk auditor)
-3. Run the multi-agent orchestration prompt (or `/teamwork` / `/plan`) from `labs/lab-04-multi-agent-capstone/PROMPTS.md` to produce `data/exports/executive_oss_bss_advisory.md`.
-4. Review the generated Executive Advisory report with the audience:
-   - **3 Feasible Orders (`APPROVE_IMMEDIATELY`)**: `ORD-TMF622-9003`, `ORD-TMF622-9005`, `ORD-TMF622-9008`
-   - **5 Contended Orders (`HOLD_REQUIRES_RAN_EXPANSION`)**: `ORD-TMF622-9001`, `ORD-TMF622-9002`, `ORD-TMF622-9004`, `ORD-TMF622-9006`, `ORD-TMF622-9007`
+2. Use `labs/lab-04-multi-agent-capstone/PROMPTS.md` to implement `src/services/order_feasibility.py` and `src/agents/adk_a2a_orchestrator.py` (`RANSliceCapacityAgent`, `BSSCommercialSLAAgent`, `TelecomNexusOrchestratorAgent`, `get_a2a_agent_card`, and `handle_a2a_jsonrpc_request`).
+3. Launch the **Google ADK Development UI (`adk web`)** locally:
+   ```bash
+   ./scripts/run_adk_web.sh --check
+   ./scripts/run_adk_web.sh
+   ```
+   Open `http://localhost:8080`, select `telecom_nexus`, and show the live multi-agent trace graph and A2A JSON-RPC handoff for `ORD-TMF622-9001`.
+4. Validate the Cloud Run + Artifact Registry **Terraform (`infra/terraform/`)** infrastructure and **Gemini Enterprise Discovery Engine A2A Registration** (`deploy/register_gemini_enterprise_agent.sh`):
+   ```bash
+   ./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run
+   ```
 
 #### Instructor Fallback Command
 ```bash

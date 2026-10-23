@@ -10,10 +10,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
+from src.agents.adk_a2a_orchestrator import (
+    get_a2a_agent_card,
+    handle_a2a_jsonrpc_request,
+)
 from src.database import fetch_all
 from src.models import FeasibilityCheckRequest, SliceRemediateRequest
 from src.services.cdr_rating import audit_cdr_revenue_leakage
@@ -134,3 +138,23 @@ def get_dashboard_summary() -> dict[str, Any]:
         "sales_orders": orders,
         "alarms": alarms,
     }
+
+
+@app.get("/.well-known/agent.json")
+@app.get("/api/v1/a2a/agent-card")
+def serve_a2a_agent_card(request: Request) -> dict[str, Any]:
+    base_url = str(request.base_url).rstrip("/")
+    try:
+        return get_a2a_agent_card(base_url=base_url)
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/a2a")
+@app.post("/api/v1/a2a/tasks/send")
+def execute_a2a_task(payload: dict[str, Any]) -> dict[str, Any]:
+    try:
+        return handle_a2a_jsonrpc_request(payload)
+    except NotImplementedError as exc:
+        raise HTTPException(status_code=501, detail=str(exc)) from exc
+

@@ -9,4 +9,6 @@ echo "[Lab 04 Setup] Ensuring Labs 01, 02 & 03 prerequisites and solutions are a
 bash "$ROOT_DIR/labs/lab-03-mcp-and-hooks/install.sh"
 bash "$ROOT_DIR/labs/lab-03-mcp-and-hooks/apply_solution.sh"
 
-echo "[Lab 04 Ready] Ready to build the Multi-Agent Capstone in src/services/order_feasibility.py."
+cp "$LAB_DIR/starter/order_feasibility.py" "$ROOT_DIR/src/services/order_feasibility.py"
+cp "$LAB_DIR/starter/adk_a2a_orchestrator.py" "$ROOT_DIR/src/agents/adk_a2a_orchestrator.py"
+echo "[Lab 04 Ready] Ready to build the Multi-Agent Capstone in src/services/order_feasibility.py and src/agents/adk_a2a_orchestrator.py."

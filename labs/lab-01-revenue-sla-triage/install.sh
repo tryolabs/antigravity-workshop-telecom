@@ -14,6 +14,7 @@ cp "$LAB_DIR/starter/cdr_rating.py" "$ROOT_DIR/src/services/cdr_rating.py"
 cp "$LAB_DIR/starter/sla_monitor.py" "$ROOT_DIR/src/services/sla_monitor.py"
 cp "$ROOT_DIR/labs/lab-03-mcp-and-hooks/starter/telecom_mcp.py" "$ROOT_DIR/mcp_server/telecom_mcp.py"
 cp "$ROOT_DIR/labs/lab-04-multi-agent-capstone/starter/order_feasibility.py" "$ROOT_DIR/src/services/order_feasibility.py"
+cp "$ROOT_DIR/labs/lab-04-multi-agent-capstone/starter/adk_a2a_orchestrator.py" "$ROOT_DIR/src/agents/adk_a2a_orchestrator.py"
 
 rm -f "$ROOT_DIR/GEMINI.md"
 rm -f "$ROOT_DIR/.agents/rules/telecom-standards.md"

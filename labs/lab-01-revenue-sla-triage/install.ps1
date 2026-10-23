@@ -12,6 +12,7 @@ Copy-Item "$LabDir\starter\cdr_rating.py" "$RootDir\src\services\cdr_rating.py" 
 Copy-Item "$LabDir\starter\sla_monitor.py" "$RootDir\src\services\sla_monitor.py" -Force
 Copy-Item "$RootDir\labs\lab-03-mcp-and-hooks\starter\telecom_mcp.py" "$RootDir\mcp_server\telecom_mcp.py" -Force
 Copy-Item "$RootDir\labs\lab-04-multi-agent-capstone\starter\order_feasibility.py" "$RootDir\src\services\order_feasibility.py" -Force
+Copy-Item "$RootDir\labs\lab-04-multi-agent-capstone\starter\adk_a2a_orchestrator.py" "$RootDir\src\agents\adk_a2a_orchestrator.py" -Force
 
 Remove-Item "$RootDir\GEMINI.md" -ErrorAction SilentlyContinue
 Remove-Item "$RootDir\.agents\rules\telecom-standards.md" -ErrorAction SilentlyContinue

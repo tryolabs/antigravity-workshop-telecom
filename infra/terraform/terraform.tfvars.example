@@ -1,0 +1,6 @@
+project_id                 = "your-telecom-gcp-project-id"
+region                     = "us-central1"
+service_name               = "telecom-nexus-oss-bss"
+gemini_enterprise_app_id   = "telecom-nexus-enterprise-app"
+gemini_enterprise_location = "global"
+allow_unauthenticated      = false
