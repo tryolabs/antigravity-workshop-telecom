@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telecom Nexus — 5G Slice SLA, CDR Revenue Assurance & B2B Intelligence</title>
+  <style>
+    :root {
+      --bg: #080c14;
+      --panel: #111827;
+      --panel-border: #1f2937;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --ok: #10b981;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --purple: #a855f7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand img.tryolabs-logo {
+      height: 38px;
+      width: auto;
+      border-radius: 6px;
+      background: #ffffff;
+      padding: 4px 10px;
+    }
+    .brand h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+    .brand p {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    button.btn {
+      background: var(--accent);
+      color: #030712;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    button.btn:hover { opacity: 0.9; }
+    button.btn-sm {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+    }
+    button.btn-purple {
+      background: var(--purple);
+      color: #fff;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .kpi-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .kpi-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 20px;
+      overflow-x: auto;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+    }
+    .status-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .tag-ok { background: rgba(16, 185, 129, 0.15); color: var(--ok); }
+    .tag-warn { background: rgba(245, 158, 11, 0.15); color: var(--warn); }
+    .tag-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e293b;
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+      z-index: 999;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="/static/tryolabs-logo.png" alt="Tryolabs Logo" class="tryolabs-logo" />
+      <div>
+        <h1>Telecom Nexus — 5G Network Slice SLA & Commercial Revenue Intelligence</h1>
+        <p>Delivered by <strong>Tryolabs</strong> • Powered by Google Antigravity & Gemini Enterprise • 3GPP TS 28.552 / GSMA TAP3 / TMF622</p>
+      </div>
+    </div>
+    <div class="badge-bar">
+      <span class="pill">Gemini Enterprise Governed</span>
+      <span class="pill">PLMN 310-410 (5G SA)</span>
+      <button class="btn" onclick="loadDashboard()">Refresh Telemetry</button>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Detected CDR Revenue Leakage</div>
+      <div class="kpi-value" id="kpi-leakage" style="color: var(--warn);">$0.00</div>
+      <div class="kpi-sub" id="kpi-leakage-sub">Loading TAP3 CDR audit...</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Active B2B SLA Penalty Exposure</div>
+      <div class="kpi-value" id="kpi-penalty" style="color: var(--danger);">$0.00</div>
+      <div class="kpi-sub" id="kpi-penalty-sub">Loading B2B SLA compliance...</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">5G RAN Slice Cells Health</div>
+      <div class="kpi-value" id="kpi-cells" style="color: var(--ok);">0 / 0</div>
+      <div class="kpi-sub" id="kpi-cells-sub">Healthy vs Congested/Degraded</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">TMF622 Pipeline MRR</div>
+      <div class="kpi-value" id="kpi-mrr" style="color: var(--accent);">$0.00</div>
+      <div class="kpi-sub" id="kpi-mrr-sub">15 Enterprise B2B Orders</div>
+    </div>
+  </section>
+
+  <div class="section-grid">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">1. Enterprise B2B SLA Contracts & Real-Time 5G Slice Compliance</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Contract ID</th>
+            <th>Enterprise Account</th>
+            <th>Tier</th>
+            <th>Contract Status</th>
+            <th>TAC / Slice</th>
+            <th>Committed Latency</th>
+            <th>Observed Worst Latency</th>
+            <th>Degraded Cell</th>
+            <th>SLA Status</th>
+            <th>Penalty Exposure ($)</th>
+          </tr>
+        </thead>
+        <tbody id="sla-table-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">2. TMF622 B2B Sales Order Pipeline & Lab 4 Slice Remediation</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Enterprise Account</th>
+            <th>Target TAC</th>
+            <th>Slice (SST / 5QI)</th>
+            <th>Bandwidth</th>
+            <th>Max Latency</th>
+            <th>Est. MRR ($)</th>
+            <th>Order Status</th>
+            <th>Actions (Lab 4 API)</th>
+          </tr>
+        </thead>
+        <tbody id="orders-table-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">3. 3GPP 5G RAN Cell Telemetry (20 Sectors Across 5 TACs)</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Cell ID</th>
+            <th>gNodeB</th>
+            <th>TAC / Region</th>
+            <th>Slice SST</th>
+            <th>PRB Load (%)</th>
+            <th>PDCP Latency</th>
+            <th>RSRP / SINR</th>
+            <th>Avail. BW</th>
+            <th>Neighbor Cell</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="ran-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 4500);
+    }
+
+    function fmtUsd(val) {
+      return '$' + Number(val || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    async function checkFeasibility(orderId) {
+      const res = await fetch('/api/v1/orders/feasibility-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast('Feasibility Check (' + res.status + '): ' + (data.detail || 'Error'));
+        return;
+      }
+      showToast('Order ' + orderId + ' -> ' + data.feasibility_status + (data.recommended_cell_id ? ' (Cell: ' + data.recommended_cell_id + ')' : ''));
+      loadDashboard();
+    }
+
+    async function remediateOrder(orderId) {
+      const res = await fetch('/api/v1/slices/remediate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, steering_mode: 'NEIGHBOR_OFFLOAD_AND_PRB_REALLOC' })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showToast('Slice Remediation (' + res.status + '): ' + (data.detail || 'Error'));
+        return;
+      }
+      showToast('Remediated ' + orderId + '! Preserved Commercial Value: ' + fmtUsd(data.total_commercial_value_preserved_usd));
+      loadDashboard();
+    }
+
+    async function loadDashboard() {
+      const res = await fetch('/api/v1/dashboard/summary');
+      const data = await res.json();
+
+      const cdr = data.cdr_audit;
+      const sla = data.sla_audit;
+      const cells = data.ran_cells || [];
+      const orders = data.sales_orders || [];
+
+      document.getElementById('kpi-leakage').textContent = fmtUsd(cdr.total_leakage_usd);
+      document.getElementById('kpi-leakage-sub').textContent =
+        cdr.underbilled_cdr_count + ' underbilled CDRs out of ' + cdr.total_cdrs_audited + ' audited';
+
+      document.getElementById('kpi-penalty').textContent = fmtUsd(sla.total_penalty_exposure_usd);
+      document.getElementById('kpi-penalty-sub').textContent =
+        sla.breached_contracts_count + ' breached / ' + sla.evaluated_contracts_count + ' evaluated contracts';
+
+      const healthyCells = cells.filter(c => c.status === 'HEALTHY').length;
+      document.getElementById('kpi-cells').textContent = healthyCells + ' / ' + cells.length;
+      document.getElementById('kpi-cells-sub').textContent =
+        (cells.length - healthyCells) + ' sectors congested or degraded';
+
+      const totalMrr = orders.reduce((acc, o) => acc + Number(o.estimated_mrr_usd || 0), 0);
+      document.getElementById('kpi-mrr').textContent = fmtUsd(totalMrr);
+      document.getElementById('kpi-mrr-sub').textContent =
+        orders.length + ' TMF622 B2B orders (' + fmtUsd(totalMrr * 12) + ' ARR)';
+
+      const allContracts = [...(sla.breached_contracts || []), ...(sla.compliant_contracts || [])]
+        .sort((a, b) => a.contract_id.localeCompare(b.contract_id));
+
+      const slaTbody = document.getElementById('sla-table-body');
+      slaTbody.innerHTML = allContracts.map(c => `
+        <tr>
+          <td><code>${c.contract_id}</code></td>
+          <td>${c.enterprise_name}</td>
+          <td>${c.account_tier}</td>
+          <td><span class="status-tag ${c.status === 'ACTIVE' ? 'tag-ok' : 'tag-warn'}">${c.status}</span></td>
+          <td><code>${c.primary_tac}</code> / SST-${c.s_nssai_sst}</td>
+          <td>${c.committed_latency_ms} ms</td>
+          <td>${c.observed_worst_latency_ms} ms</td>
+          <td><code>${c.degraded_cell_id}</code></td>
+          <td><span class="status-tag ${c.is_breached ? 'tag-danger' : 'tag-ok'}">${c.is_breached ? 'SLA BREACH' : 'COMPLIANT'}</span></td>
+          <td><strong>${fmtUsd(c.penalty_exposure_usd)}</strong></td>
+        </tr>
+      `).join('');
+
+      const ordersTbody = document.getElementById('orders-table-body');
+      ordersTbody.innerHTML = orders.map(o => {
+        let tagClass = 'tag-warn';
+        if (o.order_status === 'READY_TO_ACTIVATE') tagClass = 'tag-ok';
+        if (o.order_status === 'REJECTED') tagClass = 'tag-danger';
+        return `
+          <tr>
+            <td><code>${o.order_id}</code></td>
+            <td>${o.enterprise_name}</td>
+            <td><code>${o.target_tac}</code></td>
+            <td>SST-${o.requested_slice_sst} (5QI=${o.requested_qos_5qi})</td>
+            <td>${o.requested_bandwidth_mbps} Mbps</td>
+            <td>${o.max_latency_ms} ms</td>
+            <td>${fmtUsd(o.estimated_mrr_usd)}</td>
+            <td><span class="status-tag ${tagClass}">${o.order_status}</span></td>
+            <td>
+              <button class="btn btn-sm" onclick="checkFeasibility('${o.order_id}')">Check Feasibility</button>
+              <button class="btn btn-sm btn-purple" onclick="remediateOrder('${o.order_id}')">Remediate Slice</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const ranTbody = document.getElementById('ran-table-body');
+      ranTbody.innerHTML = cells.map(c => {
+        const tagClass = c.status === 'HEALTHY' ? 'tag-ok' : (c.status === 'DEGRADED' ? 'tag-warn' : 'tag-danger');
+        return `
+          <tr>
+            <td><code>${c.cell_id}</code></td>
+            <td><code>${c.gnodeb_id}</code></td>
+            <td><code>${c.tac}</code> (${c.region_name})</td>
+            <td>SST-${c.s_nssai_sst} (${c.s_nssai_sd})</td>
+            <td>${c.prb_utilization_pct}%</td>
+            <td>${c.pdcp_latency_ms} ms</td>
+            <td>${c.rsrp_dbm} dBm / ${c.sinr_db} dB</td>
+            <td>${c.available_bandwidth_mbps} / ${c.max_bandwidth_mbps} Mbps</td>
+            <td><code>${c.neighbor_cell_id}</code></td>
+            <td><span class="status-tag ${tagClass}">${c.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

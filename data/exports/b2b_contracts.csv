@@ -1,0 +1,13 @@
+contract_id,enterprise_name,account_tier,sales_rep_id,primary_tac,s_nssai_sst,s_nssai_sd,annual_contract_value_usd,committed_latency_ms,committed_availability_pct,sla_penalty_per_hour_usd,included_data_tb,overage_rate_per_gb_usd,roaming_markup_pct,status,breach_hours_mtd
+CTR-B2B-1001,Mayo Clinic Connected Ambulance URLLC,STRATEGIC_GLOBAL,REP-US-204,TAC-CHI-002,2,0x00A102,1850000.0,6.0,99.99,9500.0,80.0,12.0,50.0,ACTIVE,6.5
+CTR-B2B-1002,Goldman Sachs Low-Latency Trading Backup,STRATEGIC_GLOBAL,REP-US-101,TAC-NY-001,2,0x00A101,2400000.0,5.0,99.995,12000.0,120.0,14.0,55.0,ACTIVE,8.0
+CTR-B2B-1003,Maersk Smart Port Autonomous Cranes,PLATINUM,REP-US-409,TAC-LAX-004,2,0x00B204,1350000.0,8.0,99.99,7500.0,95.0,11.5,45.0,ACTIVE,0.0
+CTR-B2B-1004,Delta Air Lines Tarmac Operations eMBB,PLATINUM,REP-US-305,TAC-DAL-003,1,0x00E301,980000.0,20.0,99.95,5200.0,250.0,4.5,35.0,ACTIVE,5.0
+CTR-B2B-1005,Ford Global Connected Fleet Telemetry,PLATINUM,REP-US-204,TAC-CHI-002,3,0x00C302,840000.0,45.0,99.9,3800.0,400.0,2.25,30.0,ACTIVE,0.0
+CTR-B2B-1006,NBCUniversal Live 8K Broadcast Uplink,GOLD,REP-US-101,TAC-NY-001,1,0x00E101,720000.0,18.0,99.95,4500.0,320.0,4.75,40.0,ACTIVE,4.0
+CTR-B2B-1007,Walmart Cold-Chain Logistics mIoT,GOLD,REP-US-305,TAC-DAL-003,3,0x00C303,610000.0,50.0,99.9,2800.0,500.0,2.1,25.0,ACTIVE,0.0
+CTR-B2B-1008,Royal Caribbean Smart Cruise Port Network,GOLD,REP-US-512,TAC-MIA-005,1,0x00E505,540000.0,22.0,99.95,3200.0,210.0,4.25,35.0,ACTIVE,0.0
+CTR-B2B-1009,Siemens Smart Grid Automated Substation,PLATINUM,REP-US-512,TAC-MIA-005,2,0x00A505,1120000.0,7.0,99.99,6500.0,90.0,11.0,45.0,ACTIVE,3.5
+CTR-B2B-1010,DHL Autonomous Warehouse Robotics,SILVER,REP-US-409,TAC-LAX-004,1,0x00E404,390000.0,25.0,99.9,2000.0,140.0,4.5,30.0,ACTIVE,0.0
+CTR-B2B-1011,Legacy Retail POS Backhaul Corp (Decommissioned),SILVER,REP-US-101,TAC-NY-001,2,0x00A101,250000.0,5.0,99.99,8000.0,40.0,9.0,20.0,TERMINATED,12.0
+CTR-B2B-1012,Apex Autonomous Mining Sandbox (Pre-Commercial),GOLD,REP-US-204,TAC-CHI-002,2,0x00A102,680000.0,6.0,99.99,6000.0,60.0,10.5,35.0,DRAFT,9.0

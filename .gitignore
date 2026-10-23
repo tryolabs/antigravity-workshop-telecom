@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+.DS_Store
+data/logs/hook_audit.log
+data/exports/sla_revenue_audit_report.json
+data/exports/sla_revenue_audit_report.md

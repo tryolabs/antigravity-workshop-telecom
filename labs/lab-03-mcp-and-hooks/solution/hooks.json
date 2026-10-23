@@ -1,0 +1,29 @@
+{
+  "telecom-compliance-guard": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -f ./scripts/audit_hook.py ]; then python3 ./scripts/audit_hook.py --event PreToolUse; else python3 ../scripts/audit_hook.py --event PreToolUse; fi'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "run_command|edit_file|write_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'if [ -f ./scripts/audit_hook.py ]; then python3 ./scripts/audit_hook.py --event PostToolUse; else python3 ../scripts/audit_hook.py --event PostToolUse; fi'",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
