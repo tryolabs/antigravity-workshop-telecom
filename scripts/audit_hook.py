@@ -35,8 +35,14 @@ DESTRUCTIVE_PATTERNS = [
 
 def evaluate_pre_tool_use(payload: dict[str, Any]) -> dict[str, Any]:
     tool_call = payload.get("toolCall", {}) or {}
-    args = tool_call.get("args", {}) or {}
-    cmd = str(args.get("CommandLine", ""))
+    args = tool_call.get("args", {}) or payload.get("tool_input", {}) or {}
+    cmd = str(
+        args.get("CommandLine")
+        or args.get("command")
+        or payload.get("CommandLine")
+        or payload.get("command")
+        or ""
+    )
 
     for pattern in DESTRUCTIVE_PATTERNS:
         if re.search(pattern, cmd, flags=re.IGNORECASE):

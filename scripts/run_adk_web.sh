@@ -5,12 +5,28 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 PORT="${ADK_WEB_PORT:-8080}"
+HOST="${ADK_WEB_HOST:-127.0.0.1}"
 
-if [[ "${1:-}" == "--check" ]] || [[ "${1:-}" == "--dry-run" ]]; then
-  echo "[ADK Web Check] Validating adk_agents/telecom_nexus/agent.py and root_agent..."
-  ./.venv/bin/python -c "from adk_agents.telecom_nexus.agent import root_agent, get_gemini_enterprise_connection_config; print('Loaded root_agent:', getattr(root_agent, 'name', 'ok')); cfg = get_gemini_enterprise_connection_config(); assert 'discovery_engine_agent_endpoint' in cfg; print('[OK] ADK root_agent & Gemini Enterprise config verified!')"
-  exit 0
-fi
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --check|--dry-run)
+      echo "[ADK Web Check] Validating adk_agents/telecom_nexus/agent.py and root_agent..."
+      ./.venv/bin/python -c "from adk_agents.telecom_nexus.agent import root_agent, get_gemini_enterprise_connection_config; print('Loaded root_agent:', getattr(root_agent, 'name', 'ok')); cfg = get_gemini_enterprise_connection_config(); assert 'discovery_engine_agent_endpoint' in cfg; print('[OK] ADK root_agent & Gemini Enterprise config verified!')"
+      exit 0
+      ;;
+    --port)
+      PORT="$2"
+      shift 2
+      ;;
+    --host)
+      HOST="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
 
 ./.venv/bin/adk telemetry disable >/dev/null 2>&1 || true
 

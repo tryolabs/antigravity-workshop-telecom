@@ -21,7 +21,7 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN="true"
       shift
       ;;
-    --project)
+    --project|--project-id)
       PROJECT_ID="$2"
       shift 2
       ;;
@@ -29,7 +29,7 @@ while [[ $# -gt 0 ]]; do
       REGION="$2"
       shift 2
       ;;
-    --gemini-app-id)
+    --gemini-app-id|--app-id)
       GEMINI_APP_ID="$2"
       shift 2
       ;;
