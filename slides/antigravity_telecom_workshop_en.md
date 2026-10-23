@@ -98,7 +98,7 @@ color: #f0f6fc
 - Objective 2 (Revenue & SLA Accuracy): Eliminate floating-point/unit bugs leaking `$54,672.22` in 5G CDRs and stop `$35,000` in false B2B SLA alerts on non-active contracts.
 - What You Will Build #1 (3GPP TAP3 Rating Engine): Refactor `src/services/cdr_rating.py` to enforce binary GiB (`Decimal(1024 ** 3)`) and apply `roaming_markup` across all visiting PLMNs (`NR_5G` + `EUTRAN_4G`).
 - What You Will Build #2 (B2B SLA Breach Monitor): Refactor `src/services/sla_monitor.py` to filter `WHERE status = 'ACTIVE'` and trigger breaches when `worst_latency > committed_latency`.
-- Deliverable & Verification: Pass all 5 unit/integration tests in `tests/test_lab01_triage.py` (`./labs/lab-01-revenue-sla-triage/verify.sh`) and verify KPIs on `http://localhost:8001`.
+- Deliverable & Verification: Pass all 4 unit/integration tests in `tests/test_lab01_triage.py` (`./labs/lab-01-revenue-sla-triage/verify.sh`) and verify KPIs on `http://localhost:8001`.
 
 > **Delivered by Tryolabs • Full printable guide: LAB_01_INSTRUCTIONS_EN.pdf**
 
@@ -116,7 +116,7 @@ color: #f0f6fc
 - Step 2 (Reproduce Failing Tests): Run `./.venv/bin/pytest tests/test_lab01_triage.py` to observe the CDR underbilling and SLA latency failures.
 - Step 3 (Fix `src/services/cdr_rating.py`): Set `BYTES_DIVISOR = Decimal(1024 ** 3)` (binary GiB per 3GPP TS 32.298) and apply `roaming_markup` whenever `roaming_plmn != HOME_PLMN`.
 - Step 4 (Fix `src/services/sla_monitor.py`): Add `WHERE status = 'ACTIVE'` to the SQL query and fix `latency_breach` to `worst_latency > committed_latency`.
-- Step 5 (Verify & Inspect): Run `./labs/lab-01-revenue-sla-triage/verify.sh` (`5 passed`: `$54,672.22` CDR leakage recovered; 5 `ACTIVE` SLA breaches = `$224,500.00`).
+- Step 5 (Verify & Inspect): Run `./labs/lab-01-revenue-sla-triage/verify.sh` (`4 passed`: `$54,672.22` CDR leakage recovered; 5 `ACTIVE` SLA breaches = `$224,500.00`).
 
 ### Copy-Paste Prompts (PROMPTS.md) & Verification
 - Prompt 1 — Discovery (@Mentions): '@data/logs/ran_alarms.jsonl @src/services/cdr_rating.py @src/services/sla_monitor.py @tests/test_lab01_triage.py Run pytest to reproduce ALM-BSS-8006 and ALM-3GPP-8001..8005 and explain the exact root causes.'
@@ -224,7 +224,7 @@ color: #f0f6fc
 - Objective 2 (Deterministic Security & CPNI Compliance): Enforce PII/CPNI masking (`3104***0001`) and hard-block destructive SQL (`DROP`/`DELETE`) before tool execution via `PreToolUse` hooks.
 - What You Will Build #1 (`mcp_server/telecom_mcp.py` & `.agents/mcp_config.json`): 4 `@mcp.tool()` functions (`query_ran_cell_health`, `calculate_contract_penalty_exposure`, `inspect_unbilled_cdrs`, `evaluate_slice_capacity`).
 - What You Will Build #2 (`.agents/hooks.json` & `scripts/audit_hook.py`): Deterministic `PreToolUse` & `PostToolUse` lifecycle gates returning exit code `2` on policy violations and writing `data/logs/hook_audit.log`.
-- Deliverable & Verification: Pass all 6 MCP & Hook security tests in `./labs/lab-03-mcp-and-hooks/verify.sh`.
+- Deliverable & Verification: Pass all 3 MCP & Hook security tests (`11 passed` cumulative) in `./labs/lab-03-mcp-and-hooks/verify.sh`.
 
 > **Delivered by Tryolabs • Full printable guide: LAB_03_INSTRUCTIONS_EN.pdf**
 
@@ -242,7 +242,7 @@ color: #f0f6fc
 - Step 2 (Complete `mcp_server/telecom_mcp.py`): Implement `calculate_contract_penalty_exposure`, `inspect_unbilled_cdrs` (masking `imsi`/`msisdn` via `_mask_cpni`), and `evaluate_slice_capacity`.
 - Step 3 (Register `.agents/mcp_config.json`): Configure `telecom-nexus-mcp` invoking `./.venv/bin/python mcp_server/telecom_mcp.py` over stdio.
 - Step 4 (Configure `.agents/hooks.json`): Wire `PreToolUse` and `PostToolUse` to `scripts/audit_hook.py` (blocks `DROP`/`TRUNCATE`/`DELETE` with exit code `2`).
-- Step 5 (Verify): Run `./labs/lab-03-mcp-and-hooks/verify.sh` (`6 passed` + audit log verified).
+- Step 5 (Verify): Run `./labs/lab-03-mcp-and-hooks/verify.sh` (`11 passed` cumulative across Labs 01–03 + audit log verified).
 
 ### Copy-Paste Prompts (PROMPTS.md) & Verification
 - Prompt 1 — Complete FastMCP Server: '/plan Implement the 3 remaining @mcp.tool() functions in @mcp_server/telecom_mcp.py (calculate_contract_penalty_exposure, inspect_unbilled_cdrs with CPNI masking, evaluate_slice_capacity) to match @tests/test_lab03_mcp_hooks.py.'

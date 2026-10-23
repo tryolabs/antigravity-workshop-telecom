@@ -36,10 +36,10 @@ Ejecute estos comandos en `/Users/hcorrea/Workspace/agy_agy_workshop/antigravity
 
 # 3. Iniciar el Panel Web OSS/BSS de FastAPI en una pestaña de terminal dedicada
 source .venv/bin/activate
-uvicorn src.main:app --reload --port 8000
+uvicorn src.main:app --reload --port 8001
 ```
 
-Abra `http://127.0.0.1:8000` en su navegador y verifique que:
+Abra `http://127.0.0.1:8001` en su navegador y verifique que:
 - El logotipo de **Tryolabs** se muestra en el encabezado superior izquierdo.
 - **Unbilled CDR Leakage** muestra inicialmente **`$0.00`** (Bug #1 activo).
 - **Active SLA Penalty Exposure** muestra inicialmente **`$259,500.00`** (Bug #2 activo — incluye el contrato suspendido `CTR-B2B-1007`).
@@ -64,8 +64,8 @@ En la estación de trabajo del ingeniero y dentro del repositorio, Antigravity a
 3. **Bloqueo de Acceso a Archivos Fuera del Workspace**: Impide que el agente lea archivos fuera del directorio del proyecto (`/Users/hcorrea/Workspace/agy_agy_workshop/antigravity-workshop-telecom`).
 4. **Política de Acceso a Internet (`enabled` / `allowlist` / `disabled`)**: Previene conexiones salientes hacia endpoints externos no autorizados.
 5. **Lista Blanca y Lista Negra de Comandos (Allowlist & Denylist)**: Bloquea explícitamente comandos destructivos (`rm -rf`, `DROP TABLE`, credenciales de producción).
-6. **Lista Blanca del Navegador (Browser Allowlist)**: Restringe el agente `/browser` únicamente a portales internos OSS/BSS aprobados (`127.0.0.1:8000`).
-7. **Hooks Deterministas del Espacio de Trabajo (`.agents/hooks.json`)**: Hooks de pre-ejecución (`PreRunCommand`) y post-edición (`PostEditFile`) que aplican pistas de auditoría SOX 404 y FCC CPNI (construidos en vivo en el **Laboratorio 03**).
+6. **Lista Blanca del Navegador (Browser Allowlist)**: Restringe el agente `/browser` únicamente a portales internos OSS/BSS aprobados (`127.0.0.1:8001`).
+7. **Hooks Deterministas del Espacio de Trabajo (`.agents/hooks.json`)**: Hooks de pre-ejecución (`PreToolUse` / `PreRunCommand`) y post-edición (`PostToolUse` / `PostEditFile`) que aplican pistas de auditoría SOX 404 y FCC CPNI (construidos en vivo en el **Laboratorio 03**).
 
 ---
 
@@ -74,7 +74,7 @@ En la estación de trabajo del ingeniero y dentro del repositorio, Antigravity a
 ### Módulo 1: Laboratorio 01 — Aseguramiento de Ingresos 5G y Triaje de SLA de Network Slicing (30 Min)
 
 #### Contexto del Escenario (5 Min)
-Muestre el panel en vivo en `http://127.0.0.1:8000`. Señale dos anomalías reportadas por el NOC y Finanzas:
+Muestre el panel en vivo en `http://127.0.0.1:8001`. Señale dos anomalías reportadas por el NOC y Finanzas:
 1. **Alerta de Finanzas**: Los socios de roaming enviaron 250 CDRs TAP3.12 con excedentes de Ultra-Baja Latencia 5G (`5G_URLLC_ROAM`), pero el panel muestra **`$0.00` de Fuga No Facturada**.
 2. **Alerta Legal/B2B**: El panel muestra **`$259,500.00`** en exposición a penalizaciones SLA, incluyendo `$35,000` para **Apex Logistics (`CTR-B2B-1007`)**, cuyo estado de contrato es **`SUSPENDED`**.
 
@@ -85,10 +85,11 @@ Muestre el panel en vivo en `http://127.0.0.1:8000`. Señale dos anomalías repo
    ```
 2. Abra Antigravity y pegue el **Prompt 1** de `labs/lab-01-revenue-sla-triage/PROMPTS.es.md`.
 3. Observe cómo Antigravity inspecciona `src/services/cdr_rating.py` (detectando el bug `overage_gb * 0.0`) y `src/services/sla_monitor.py` (detectando la falta de verificación `c.status != 'ACTIVE'`).
-4. Pegue el **Prompt 2** para aplicar las correcciones y ejecutar las pruebas.
-5. Actualice `http://127.0.0.1:8000` (o use `/browser`) para mostrar:
-   - **Fuga de CDR No Facturada**: **`~$55,392.45`** en **125 CDRs de roaming no facturados**
-   - **Exposición Activa a Penalizaciones SLA**: **`$224,500.00`** en **5 contratos ACTIVE incumplidos** (`CTR-B2B-1001`, `1002`, `1004`, `1006`, `1009`).
+4. Pegue el **Prompt 2** para aplicar las correcciones y ejecutar las pruebas (`4/4` aprobadas).
+5. Actualice `http://127.0.0.1:8001` (o use `/browser`) para mostrar:
+   - **Fuga de CDR No Facturada**: **`$54,672.22`** en **125 CDRs de roaming no facturados**
+   - **Exposición Activa a Penalizaciones SLA**: **`$224,500.00`** en **5 contratos ACTIVE incumplidos** (`CTR-B2B-1001`, `1002`, `1004`, `1006`, `1009`)
+   - **Exposición Total a Riesgo Comercial**: **`$279,172.22`**
 
 #### Comando de Respaldo para el Instructor
 ```bash
@@ -98,7 +99,7 @@ Muestre el panel en vivo en `http://127.0.0.1:8000`. Señale dos anomalías repo
 
 ---
 
-### Módulo 2: Laboratorio 02 — Reglas de Dominio Telecom, Habilidades (Skills) y Flujos de Trabajo (30 Min)
+### Módulo 2: Laboratorio 02 — Reglas de Dominio Telecom, Habilidades (Skills) y Auditoría Ejecutiva (30 Min)
 
 #### Contexto del Escenario (5 Min)
 Pregunte a la audiencia: *"¿Cómo garantizamos que el agente de cada ingeniero siga automáticamente los umbrales de 3GPP TS 28.552, enmascare los identificadores IMSI/MSISDN según FCC CPNI y calcule las penalizaciones SLA de manera idéntica?"*
@@ -108,11 +109,16 @@ Pregunte a la audiencia: *"¿Cómo garantizamos que el agente de cada ingeniero 
    ```bash
    ./labs/lab-02-rules-and-skills/install.sh
    ```
-2. Recorra las plantillas iniciales en `.agents/rules/telecom-3gpp-governance.md`, `.agents/skills/telecom-sla-auditor/SKILL.md` y `.agents/workflows/slice-sla-triage.md`.
-3. Use los prompts de `labs/lab-02-rules-and-skills/PROMPTS.es.md` para completar la regla, la habilidad y el flujo de trabajo, y luego ejecute `/slice-sla-triage` para generar `data/exports/sla_audit_report.json`.
-4. Abra `data/exports/sla_audit_report.json` y destaque:
+2. Recorra los tres niveles de personalización:
+   - Memoria del Workspace (`GEMINI.md`)
+   - Reglas de Dominio (`.agents/rules/telecom-standards.md`)
+   - Skill con Revelación Progresiva (`.agents/skills/sla-revenue-audit/SKILL.md` + `scripts/run_sla_audit.py`)
+3. Use los prompts de `labs/lab-02-rules-and-skills/PROMPTS.es.md` (o `/learn`) para completar la personalización y ejecutar `scripts/run_sla_audit.py`, generando `data/exports/sla_revenue_audit_report.json` y `data/exports/sla_revenue_audit_report.md`.
+4. Abra `data/exports/sla_revenue_audit_report.json` y destaque:
    - `"total_penalty_exposure_usd": 224500.0`
-   - Cada contrato incumplido (`CTR-B2B-1001`, `1002`, `1004`, `1006`, `1009`) vinculado a su alarma de causa raíz `RRC_CONGESTION_ALERT`.
+   - `"total_unbilled_cdr_leakage_usd": 54672.22`
+   - `"total_commercial_risk_usd": 279172.22`
+   - Cada contrato incumplido (`CTR-B2B-1001`, `1002`, `1004`, `1006`, `1009`) vinculado a su alarma de causa raíz `RRC_CONGESTION_ALERT` (`8/8` pruebas acumuladas aprobadas).
 
 #### Comando de Respaldo para el Instructor
 ```bash
@@ -132,14 +138,14 @@ Explique que los archivos estáticos no son suficientes: los agentes necesitan *
    ```bash
    ./labs/lab-03-mcp-and-hooks/install.sh
    ```
-2. Muestre `mcp_server/telecom_mcp.py` y las 4 herramientas OSS/BSS (`query_ran_slice_health`, `inspect_cdr_leakage_by_tariff`, `evaluate_b2b_contract_sla`, `check_tmf622_order_feasibility`).
-3. Use `labs/lab-03-mcp-and-hooks/PROMPTS.es.md` para implementar `check_tmf622_order_feasibility`, configurar `.mcp.json` y conectar `.agents/hooks.json` con `scripts/audit_hook.py`.
+2. Muestre `mcp_server/telecom_mcp.py` y las 4 herramientas OSS/BSS (`query_ran_cell_health`, `calculate_contract_penalty_exposure`, `inspect_unbilled_cdrs`, `evaluate_slice_capacity`).
+3. Use `labs/lab-03-mcp-and-hooks/PROMPTS.es.md` para implementar `inspect_unbilled_cdrs` y `evaluate_slice_capacity`, configurar `.agents/mcp_config.json` y conectar `.agents/hooks.json` con `scripts/audit_hook.py`.
 4. Pruebe en vivo el hook de cumplimiento en la terminal para demostrar que bloquea SQL destructivo:
    ```bash
-   echo '{"command": "sqlite3 data/telecom_nexus.db \"DROP TABLE cdrs;\""}' | python3 scripts/audit_hook.py --event PreRunCommand
-   echo "Exit code: $?" # Devuelve Exit code: 2 (¡BLOQUEADO!)
+   echo '{"toolCall":{"name":"run_command","args":{"CommandLine":"sqlite3 data/telecom_nexus.db \"DROP TABLE b2b_contracts;\""}}}' | ./.venv/bin/python scripts/audit_hook.py --event PreToolUse
    ```
-5. Muestre `data/logs/hook_audit.log` con el registro de auditoría en formato JSON.
+   Muestre la respuesta determinista en JSON (`{"decision": "deny", "reason": "Blocked by Telecom Compliance Hook (SOX 404 / FCC CPNI)..."}`).
+5. Muestre `data/logs/hook_audit.log` con el registro de auditoría inmutable en formato JSON (`11/11` pruebas acumuladas aprobadas).
 
 #### Comando de Respaldo para el Instructor
 ```bash
@@ -159,13 +165,13 @@ Una los mundos de OSS Técnico y BSS Comercial. La Mesa de Ventas Empresariales 
    ```bash
    ./labs/lab-04-multi-agent-capstone/install.sh
    ```
-2. Use `labs/lab-04-multi-agent-capstone/PROMPTS.es.md` para implementar `src/services/order_feasibility.py` y `src/agents/adk_a2a_orchestrator.py` (`RANSliceCapacityAgent`, `BSSCommercialSLAAgent`, `TelecomNexusOrchestratorAgent`, `get_a2a_agent_card` y `handle_a2a_jsonrpc_request`).
+2. Use `labs/lab-04-multi-agent-capstone/PROMPTS.es.md` para implementar `src/services/order_feasibility.py` (`evaluate_order_feasibility`, `batch_evaluate_pending_orders`) y `src/agents/adk_a2a_orchestrator.py` (`RANSliceCapacityAgent`, `BSSCommercialSLAAgent`, `TelecomNexusOrchestratorAgent`, `get_a2a_agent_card` y `handle_a2a_jsonrpc`), aprobando las **21/21 pruebas acumuladas**.
 3. Inicie la **Interfaz de Desarrollo de Google ADK (`adk web`)** localmente:
    ```bash
    ./scripts/run_adk_web.sh --check
-   ./scripts/run_adk_web.sh
+   ./scripts/run_adk_web.sh --port 8080
    ```
-   Abra `http://localhost:8080`, seleccione `telecom_nexus` y muestre el grafo de trazas multi-agente en vivo y el handoff JSON-RPC A2A para `ORD-TMF622-9001`.
+   Abra `http://127.0.0.1:8080`, seleccione `telecom_nexus` y muestre el grafo de trazas multi-agente en vivo y el handoff JSON-RPC A2A para `ORD-TMF622-9001` (`FEASIBLE_READY`) y `ORD-TMF622-9002` (`DEFERRED_CONGESTION`).
 4. Valide la infraestructura **Terraform (`infra/terraform/`)** de Cloud Run + Artifact Registry y el **Registro A2A en Gemini Enterprise Discovery Engine** (`deploy/register_gemini_enterprise_agent.sh`):
    ```bash
    ./labs/lab-04-multi-agent-capstone/deploy_gcp.sh --dry-run
@@ -185,5 +191,5 @@ Para restablecer el repositorio al estado inicial limpio del Laboratorio 01 para
 
 ```bash
 ./labs/lab-01-revenue-sla-triage/install.sh
-rm -f data/exports/sla_audit_report.json data/exports/executive_oss_bss_advisory.md data/logs/hook_audit.log
+rm -f data/exports/sla_revenue_audit_report.json data/exports/sla_revenue_audit_report.md data/logs/hook_audit.log
 ```

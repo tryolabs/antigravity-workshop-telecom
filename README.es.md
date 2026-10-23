@@ -84,10 +84,10 @@ Este comando crea el entorno `.venv`, instala todas las dependencias (`fastapi`,
 
 ```bash
 source .venv/bin/activate
-uvicorn src.main:app --reload --port 8000
+uvicorn src.main:app --reload --port 8001
 ```
 
-Abra **`http://127.0.0.1:8000`** en su navegador (o mediante el comando `/browser` de Antigravity) para inspeccionar el panel en vivo de **Tryolabs Telecom Nexus**, los endpoints de la API REST (`/api/summary`, `/api/cdr-leakage`, `/api/sla-breaches`, `/api/order-feasibility`) y la documentación interactiva Swagger (`/docs`).
+Abra **`http://127.0.0.1:8001`** en su navegador (o mediante el comando `/browser` de Antigravity) para inspeccionar el panel en vivo de **Tryolabs Telecom Nexus**, los endpoints de la API REST (`/api/summary`, `/api/cdr-leakage`, `/api/sla-breaches`, `/api/order-feasibility`) y la documentación interactiva Swagger (`/docs`).
 
 ---
 
@@ -97,9 +97,9 @@ Cada laboratorio es 100% autónomo e incluye `install.sh` (configura el estado i
 
 | Lab | Título y Escenario Telecom | Capacidades de Antigravity Cubiertas | Guías y Prompts |
 | :--- | :--- | :--- | :--- |
-| **Lab 01** | **Aseguramiento de Ingresos 5G y Triaje de SLA de Network Slicing**<br/>Diagnostique y corrija `$55,392.45` en excedentes no facturados de CDRs TAP3.12 (`5G_URLLC_ROAM`) y elimine `$35,000` en falsos positivos de penalización SLA sobre el contrato suspendido `CTR-B2B-1007`. | Investigación de Código, Triaje Automatizado (`pytest`), Verificación UI con `/browser` | [README (ES)](labs/lab-01-revenue-sla-triage/README.es.md) \| [EN](labs/lab-01-revenue-sla-triage/README.md)<br/>[PROMPTS (ES)](labs/lab-01-revenue-sla-triage/PROMPTS.es.md) \| [EN](labs/lab-01-revenue-sla-triage/PROMPTS.md) |
-| **Lab 02** | **Reglas de Dominio 3GPP y FCC CPNI, Habilidades y Flujos de Trabajo**<br/>Codifique umbrales KPI de 3GPP TS 28.552 y enmascaramiento de suscriptores FCC CPNI en personalizaciones del espacio de trabajo y genere una auditoría JSON determinista de SLA (`$224,500.00` de exposición activa). | `.agents/rules/`, `.agents/skills/`, `.agents/workflows/` (`/slice-sla-triage`) | [README (ES)](labs/lab-02-rules-and-skills/README.es.md) \| [EN](labs/lab-02-rules-and-skills/README.md)<br/>[PROMPTS (ES)](labs/lab-02-rules-and-skills/PROMPTS.es.md) \| [EN](labs/lab-02-rules-and-skills/PROMPTS.md) |
-| **Lab 03** | **Servidor MCP OSS/BSS en Vivo y Hooks de Cumplimiento SOX/CPNI**<br/>Exponga telemetría OSS/BSS en vivo y factibilidad de órdenes TMF622 mediante FastMCP, y aplique hooks de seguridad `PreRunCommand` / `PostEditFile` que bloquean SQL destructivo (`DROP TABLE`). | `.mcp.json`, Herramientas `FastMCP`, `.agents/hooks.json` (`PreRunCommand`, `PostEditFile`) | [README (ES)](labs/lab-03-mcp-and-hooks/README.es.md) \| [EN](labs/lab-03-mcp-and-hooks/README.md)<br/>[PROMPTS (ES)](labs/lab-03-mcp-and-hooks/PROMPTS.es.md) \| [EN](labs/lab-03-mcp-and-hooks/PROMPTS.md) |
+| **Lab 01** | **Aseguramiento de Ingresos 5G y Triaje de SLA de Network Slicing**<br/>Diagnostique y corrija `$54,672.22` en excedentes no facturados de CDRs TAP3.12 (`5G_URLLC_ROAM`) y elimine `$35,000` en falsos positivos de penalización SLA sobre el contrato suspendido `CTR-B2B-1007`. | Investigación de Código, Triaje Automatizado (`pytest`), Verificación UI con `/browser` | [README (ES)](labs/lab-01-revenue-sla-triage/README.es.md) \| [EN](labs/lab-01-revenue-sla-triage/README.md)<br/>[PROMPTS (ES)](labs/lab-01-revenue-sla-triage/PROMPTS.es.md) \| [EN](labs/lab-01-revenue-sla-triage/PROMPTS.md) |
+| **Lab 02** | **Reglas de Dominio 3GPP y FCC CPNI, Habilidades y Flujos de Trabajo**<br/>Codifique umbrales KPI de 3GPP TS 28.552 y enmascaramiento de suscriptores FCC CPNI en personalizaciones del espacio de trabajo y genere una auditoría JSON determinista de SLA (`$224,500.00` de exposición activa, `$279,172.22` de riesgo comercial combinado). | `GEMINI.md`, `.agents/rules/`, `.agents/skills/` (`sla-revenue-audit`) | [README (ES)](labs/lab-02-rules-and-skills/README.es.md) \| [EN](labs/lab-02-rules-and-skills/README.md)<br/>[PROMPTS (ES)](labs/lab-02-rules-and-skills/PROMPTS.es.md) \| [EN](labs/lab-02-rules-and-skills/PROMPTS.md) |
+| **Lab 03** | **Servidor MCP OSS/BSS en Vivo y Hooks de Cumplimiento SOX/CPNI**<br/>Exponga telemetría OSS/BSS en vivo y factibilidad de órdenes TMF622 mediante FastMCP, y aplique hooks de seguridad `PreToolUse` / `PreRunCommand` que bloquean SQL destructivo (`DROP TABLE`). | `.agents/mcp_config.json`, Herramientas `FastMCP`, `.agents/hooks.json` (`PreToolUse`, `PostToolUse`) | [README (ES)](labs/lab-03-mcp-and-hooks/README.es.md) \| [EN](labs/lab-03-mcp-and-hooks/README.md)<br/>[PROMPTS (ES)](labs/lab-03-mcp-and-hooks/PROMPTS.es.md) \| [EN](labs/lab-03-mcp-and-hooks/PROMPTS.md) |
 | **Lab 04** | **Capstone Multi-Agente OSS/BSS: Google ADK, Protocolo A2A, `adk web` y Gemini Enterprise**<br/>Orqueste `RANSliceCapacityAgent` (OSS) y `BSSCommercialSLAAgent` (BSS) con **Google ADK**, exponga un servidor de **Protocolo A2A** (`/.well-known/agent.json` y `/api/v1/a2a`), pruebe en **ADK Dev UI (`adk web`)** y despliegue en **Cloud Run + Gemini Enterprise** vía **Terraform**. | Google ADK (`google-adk`), Protocolo A2A (JSON-RPC 2.0), `adk web`, Terraform (`infra/terraform/`), Registro en Gemini Enterprise | [README (ES)](labs/lab-04-multi-agent-capstone/README.es.md) \| [EN](labs/lab-04-multi-agent-capstone/README.md)<br/>[PROMPTS (ES)](labs/lab-04-multi-agent-capstone/PROMPTS.es.md) \| [EN](labs/lab-04-multi-agent-capstone/PROMPTS.md) |
 
 ---
@@ -120,8 +120,8 @@ Los operadores de telecomunicaciones operan bajo estrictos marcos regulatorios (
 3. **Restricción de Acceso a Archivos Fuera del Workspace**: Impide que los agentes accedan a archivos fuera de la raíz autorizada del proyecto.
 4. **Política de Acceso a Internet (`enabled` / `allowlist` / `disabled`)**: Restringe las llamadas de red salientes únicamente a dominios corporativos internos aprobados.
 5. **Lista Blanca y Negra de Comandos (Allowlist & Denylist)**: Bloquea patrones peligrosos de CLI (`rm -rf`, `DROP TABLE`, exportación de credenciales de producción).
-6. **Lista Blanca del Navegador (Browser Allowlist)**: Restringe la herramienta `/browser` a portales web internos verificados (`http://127.0.0.1:8000`).
-7. **Hooks Deterministas de Cumplimiento (`.agents/hooks.json`)**: Como se implementa en el **Laboratorio 03**, los hooks del espacio de trabajo interceptan eventos `PreRunCommand` y `PostEditFile` de forma síncrona, bloqueando comandos SQL destructivos con código de salida `2` y registrando una pista de auditoría JSON inmutable (`data/logs/hook_audit.log`).
+6. **Lista Blanca del Navegador (Browser Allowlist)**: Restringe la herramienta `/browser` a portales web internos verificados (`http://127.0.0.1:8001`).
+7. **Hooks Deterministas de Cumplimiento (`.agents/hooks.json`)**: Como se implementa en el **Laboratorio 03**, los hooks del espacio de trabajo interceptan eventos `PreToolUse` (`PreRunCommand`) y `PostToolUse` (`PostEditFile`) de forma síncrona, bloqueando comandos SQL destructivos con `"decision": "deny"` y registrando una pista de auditoría JSON inmutable (`data/logs/hook_audit.log`).
 
 ---
 
