@@ -1,5 +1,5 @@
 # ==============================================================================
-# Tryolabs — Google Antigravity Workshop (Telecom & Retail Editions)
+# Tryolabs — Google Antigravity Workshop: Telecom Edition (Telecom Nexus — antigravity-workshop-telecom)
 # Complete Pinned Python Dependency Lockfile (Direct + Transitive Packages)
 # Verified with Python 3.10 / 3.11 / 3.12 and uv / pip
 #
