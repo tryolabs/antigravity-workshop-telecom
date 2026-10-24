@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <strong>English</strong> | <a href="README.es.md">Español</a> | <a href="INSTRUCTOR_DEMO_GUIDE.md">Instructor Guide (EN)</a> | <a href="INSTRUCTOR_DEMO_GUIDE.es.md">Guía del Instructor (ES)</a>
+  <strong>English</strong> | <a href="README.es.md">Español</a>
 </p>
 
 ---
@@ -131,8 +131,6 @@ Telecommunications providers operate under strict regulatory frameworks (**FCC C
 antigravity-workshop-telecom/
 ├── README.md                          # Main Workshop Guide (English)
 ├── README.es.md                       # Guía Principal del Taller (Español)
-├── INSTRUCTOR_DEMO_GUIDE.md           # Facilitator Live Demo Script (English)
-├── INSTRUCTOR_DEMO_GUIDE.es.md        # Guía de Demostración en Vivo (Español)
 ├── install.sh / install.ps1           # One-step environment setup & data seeding
 ├── pyproject.toml / requirements.txt  # Python dependencies & pytest configuration
 ├── data/

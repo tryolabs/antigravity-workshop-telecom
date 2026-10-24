@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="README.md">English</a> | <strong>Español</strong> | <a href="INSTRUCTOR_DEMO_GUIDE.md">Instructor Guide (EN)</a> | <a href="INSTRUCTOR_DEMO_GUIDE.es.md">Guía del Instructor (ES)</a>
+  <a href="README.md">English</a> | <strong>Español</strong>
 </p>
 
 ---
@@ -131,8 +131,6 @@ Los operadores de telecomunicaciones operan bajo estrictos marcos regulatorios (
 antigravity-workshop-telecom/
 ├── README.md                          # Guía Principal del Taller (Inglés)
 ├── README.es.md                       # Guía Principal del Taller (Español)
-├── INSTRUCTOR_DEMO_GUIDE.md           # Guion de Demostración en Vivo (Inglés)
-├── INSTRUCTOR_DEMO_GUIDE.es.md        # Guion de Demostración en Vivo (Español)
 ├── install.sh / install.ps1           # Instalación en un paso y siembra de datos
 ├── pyproject.toml / requirements.txt  # Dependencias de Python y configuración de pytest
 ├── data/
