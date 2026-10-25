@@ -8,7 +8,7 @@
 **Impartido por**: **Tryolabs** (Impulsado por Google Antigravity & Gemini Enterprise)  
 **Capacidades de Antigravity Practicadas**: Reglas del Workspace (`GEMINI.md`, `.agents/rules/*.md`), Skills con Divulgación Progresiva (`.agents/skills/<name>/SKILL.md`), Menciones `@`, `/plan`, `/learn` y `/grill-me`.
 
-> 📄 **Archivo de Prompts Rápidos**: Consulta [PROMPTS.es.md](./PROMPTS.es.md) ([English](./PROMPTS.md)) para copiar y pegar los prompts optimizados.
+> **Idioma / Language:** [Español](./README.es.md) | [English](./README.md) • **Guía de Prompts:** [PROMPTS.es.md](./PROMPTS.es.md) | [PROMPTS.md](./PROMPTS.md) • **PDF:** [ES](./LAB_02_INSTRUCTIONS_ES.pdf) | [EN](./LAB_02_INSTRUCTIONS_EN.pdf)
 
 ---
 
@@ -52,14 +52,15 @@ Crea `.agents/rules/telecom-standards.md` documentando:
 - Precisión financiera `Decimal` y protección de privacidad CPNI (IMSI/MSISDN)
 
 ### Paso 3.3: Crear `.agents/skills/sla-revenue-audit/SKILL.md`
-Crea `.agents/skills/sla-revenue-audit/SKILL.md` comenzando con frontmatter YAML:
+Crea `.agents/skills/sla-revenue-audit/SKILL.md` comenzando con frontmatter YAML (la descripción en tercera persona puede estar en español o en inglés):
 
 ```markdown
 ---
 name: sla-revenue-audit
 description: >-
-  Executes a combined 5G Network Slice SLA compliance and GSMA TAP3 CDR revenue assurance
-  audit across OSS and BSS, generating an executive risk matrix in JSON and Markdown formats.
+  Ejecuta una auditoría combinada de cumplimiento SLA en Slices 5G y aseguramiento
+  de ingresos CDR GSMA TAP3 en OSS y BSS, generando una matriz ejecutiva de riesgo
+  en formatos JSON y Markdown.
 ---
 ```
 

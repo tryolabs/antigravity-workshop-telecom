@@ -4,6 +4,8 @@
 
 # Lab 01 — Optimized Antigravity Prompts Cheat Sheet (English)
 
+> **Language / Idioma:** [English](./PROMPTS.md) | [Español](./PROMPTS.es.md) • **Lab Guide:** [README.md](./README.md) | [README.es.md](./README.es.md) • **PDF:** [EN](./LAB_01_INSTRUCTIONS_EN.pdf) | [ES](./LAB_01_INSTRUCTIONS_ES.pdf)
+
 > **Goal**: Use **Google Antigravity** (Antigravity 2.0 Desktop App, Antigravity IDE, or `agy` CLI) to diagnose and repair two critical production incidents in **Telecom Nexus**:
 > 1. **CDR Revenue Leakage ($54,000+ unbilled)** in `src/services/cdr_rating.py` (3GPP TS 32.298 / GSMA TAP3.12).
 > 2. **Inverted 5G Slice SLA Latency & Contract Status Filter Bug** in `src/services/sla_monitor.py` (3GPP TS 28.552).

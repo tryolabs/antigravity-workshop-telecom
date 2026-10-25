@@ -8,7 +8,7 @@
 **Delivered by**: **Tryolabs** (Powered by Google Antigravity & Gemini Enterprise)  
 **Antigravity Capabilities Practiced**: Workspace Rules (`GEMINI.md`, `.agents/rules/*.md`), Progressive-Disclosure Skills (`.agents/skills/<name>/SKILL.md`), `@` Mentions, `/plan`, `/learn`, and `/grill-me`.
 
-> 📄 **Quick Prompts File**: See [PROMPTS.md](./PROMPTS.md) ([Español](./PROMPTS.es.md)) for copy-paste prompts.
+> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN](./LAB_02_INSTRUCTIONS_EN.pdf) | [ES](./LAB_02_INSTRUCTIONS_ES.pdf)
 
 ---
 

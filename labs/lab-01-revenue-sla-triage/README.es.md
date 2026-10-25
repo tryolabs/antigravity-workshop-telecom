@@ -7,7 +7,7 @@
 **Duración**: 45 minutos  
 **Capacidades de Antigravity Practicadas**: Menciones de contexto `@`, Modo `/plan`, Comando Inline (`Cmd+I` / `Ctrl+I`), Antigravity Tab (Supercomplete), Diffs Visuales, Ejecución de Pruebas en Terminal, `/browser` y `/learn`.
 
-> 📄 **Archivo de Prompts Rápidos**: Consulta [PROMPTS.es.md](./PROMPTS.es.md) ([English](./PROMPTS.md)) para copiar y pegar los prompts optimizados.
+> **Idioma / Language:** [Español](./README.es.md) | [English](./README.md) • **Guía de Prompts:** [PROMPTS.es.md](./PROMPTS.es.md) | [PROMPTS.md](./PROMPTS.md) • **PDF:** [ES](./LAB_01_INSTRUCTIONS_ES.pdf) | [EN](./LAB_01_INSTRUCTIONS_EN.pdf)
 
 ---
 

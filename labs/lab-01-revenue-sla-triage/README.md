@@ -7,7 +7,7 @@
 **Duration**: 45 minutes  
 **Antigravity Capabilities Practiced**: `@` Context Mentions, `/plan` Mode, Inline Command (`Cmd+I` / `Ctrl+I`), Antigravity Tab (Supercomplete), Visual Diff Overlays, Terminal Test Execution, `/browser`, and `/learn`.
 
-> 📄 **Quick Prompts File**: See [PROMPTS.md](./PROMPTS.md) ([Español](./PROMPTS.es.md)) for copy-paste prompts.
+> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN](./LAB_01_INSTRUCTIONS_EN.pdf) | [ES](./LAB_01_INSTRUCTIONS_ES.pdf)
 
 ---
 

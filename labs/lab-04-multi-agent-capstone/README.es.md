@@ -4,7 +4,7 @@
   <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="170" />
 </p>
 
-[English](README.md) | **Español** | [Prompts (EN)](PROMPTS.md) | [Prompts (ES)](PROMPTS.es.md)
+> **Idioma / Language:** [Español](./README.es.md) | [English](./README.md) • **Guía de Prompts:** [PROMPTS.es.md](./PROMPTS.es.md) | [PROMPTS.md](./PROMPTS.md) • **PDF:** [ES](./LAB_04_INSTRUCTIONS_ES.pdf) | [EN](./LAB_04_INSTRUCTIONS_EN.pdf)
 
 ---
 

@@ -4,6 +4,8 @@
 
 # Lab 02 — Optimized Antigravity Prompts Cheat Sheet (English)
 
+> **Language / Idioma:** [English](./PROMPTS.md) | [Español](./PROMPTS.es.md) • **Lab Guide:** [README.md](./README.md) | [README.es.md](./README.es.md) • **PDF:** [EN](./LAB_02_INSTRUCTIONS_EN.pdf) | [ES](./LAB_02_INSTRUCTIONS_ES.pdf)
+
 > **Goal**: Use **Google Antigravity** (associated with your **Gemini Enterprise** license and delivered by **Tryolabs**) to encode Telecom 3GPP/GSMA/TMF domain governance into:
 > 1. Root Workspace Constitution (`GEMINI.md`)
 > 2. Modular Rule (`.agents/rules/telecom-standards.md`)

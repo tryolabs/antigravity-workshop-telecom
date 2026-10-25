@@ -8,7 +8,7 @@
 **Delivered by**: **Tryolabs** (Powered by Google Antigravity & Gemini Enterprise)  
 **Antigravity Capabilities Practiced**: Model Context Protocol (`mcp_config.json` + FastMCP), Lifecycle Hooks (`hooks.json` `PreToolUse` & `PostToolUse`), Antigravity Client Security Settings (Sandbox, Tool Execution Policy, Allowlists/Denylists), and Google Cloud **Gemini Enterprise** Governance.
 
-> 📄 **Quick Prompts File**: See [PROMPTS.md](./PROMPTS.md) ([Español](./PROMPTS.es.md)) for copy-paste prompts.
+> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN](./LAB_03_INSTRUCTIONS_EN.pdf) | [ES](./LAB_03_INSTRUCTIONS_ES.pdf)
 
 ---
 

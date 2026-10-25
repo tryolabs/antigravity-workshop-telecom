@@ -4,6 +4,8 @@
 
 # Lab 03 — Guía de Prompts Optimizados para Antigravity (Español)
 
+> **Idioma / Language:** [Español](./PROMPTS.es.md) | [English](./PROMPTS.md) • **Guía del Lab:** [README.es.md](./README.es.md) | [README.md](./README.md) • **PDF:** [ES](./LAB_03_INSTRUCTIONS_ES.pdf) | [EN](./LAB_03_INSTRUCTIONS_EN.pdf)
+
 > **Objetivo**: Conectar **Google Antigravity** (gobernado por **Gemini Enterprise** e impartido por **Tryolabs**) a bases de datos Telecom OSS/BSS en vivo mediante **Model Context Protocol (FastMCP)** e imponer controles determinísticos de seguridad CPNI y de base de datos mediante **Lifecycle Hooks (`hooks.json`)**.
 
 ---

@@ -4,6 +4,8 @@
 
 # Lab 01 — Guía de Prompts Optimizados para Antigravity (Español)
 
+> **Idioma / Language:** [Español](./PROMPTS.es.md) | [English](./PROMPTS.md) • **Guía del Lab:** [README.es.md](./README.es.md) | [README.md](./README.md) • **PDF:** [ES](./LAB_01_INSTRUCTIONS_ES.pdf) | [EN](./LAB_01_INSTRUCTIONS_EN.pdf)
+
 > **Objetivo**: Utilizar **Google Antigravity** (Antigravity 2.0 Desktop App, Antigravity IDE o el CLI `agy`) para diagnosticar y reparar dos incidentes críticos de producción en **Telecom Nexus**:
 > 1. **Fuga de Ingresos en Tasación de CDRs ($54,000+ no facturados)** en `src/services/cdr_rating.py` (3GPP TS 32.298 / GSMA TAP3.12).
 > 2. **Bug de Comparación Invertida de Latencia SLA en Slices 5G y Filtro de Contratos** en `src/services/sla_monitor.py` (3GPP TS 28.552).

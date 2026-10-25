@@ -4,6 +4,8 @@
 
 # Lab 02 — Guía de Prompts Optimizados para Antigravity (Español)
 
+> **Idioma / Language:** [Español](./PROMPTS.es.md) | [English](./PROMPTS.md) • **Guía del Lab:** [README.es.md](./README.es.md) | [README.md](./README.md) • **PDF:** [ES](./LAB_02_INSTRUCTIONS_ES.pdf) | [EN](./LAB_02_INSTRUCTIONS_EN.pdf)
+
 > **Objetivo**: Utilizar **Google Antigravity** (asociado a tu licencia de **Gemini Enterprise** e impartido por **Tryolabs**) para codificar la gobernanza técnica y comercial Telecom (3GPP/GSMA/TMF) en:
 > 1. Constitución del Workspace (`GEMINI.md`)
 > 2. Regla Modular (`.agents/rules/telecom-standards.md`)

@@ -4,6 +4,8 @@
 
 # Lab 03 — Optimized Antigravity Prompts Cheat Sheet (English)
 
+> **Language / Idioma:** [English](./PROMPTS.md) | [Español](./PROMPTS.es.md) • **Lab Guide:** [README.md](./README.md) | [README.es.md](./README.es.md) • **PDF:** [EN](./LAB_03_INSTRUCTIONS_EN.pdf) | [ES](./LAB_03_INSTRUCTIONS_ES.pdf)
+
 > **Goal**: Connect **Google Antigravity** (governed by **Gemini Enterprise** and delivered by **Tryolabs**) to live Telecom OSS/BSS databases via **Model Context Protocol (FastMCP)** and enforce deterministic CPNI/database security via **Lifecycle Hooks (`hooks.json`)**.
 
 ---

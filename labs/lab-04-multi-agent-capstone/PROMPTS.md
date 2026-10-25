@@ -4,7 +4,7 @@
 
 # Lab 04 Antigravity Prompts: Multi-Agent ADK, A2A Protocol, ADK Dev UI & Gemini Enterprise
 
-**English** | [Español](PROMPTS.es.md) | [Lab 04 Guide](README.md)
+> **Language / Idioma:** [English](./PROMPTS.md) | [Español](./PROMPTS.es.md) • **Lab Guide:** [README.md](./README.md) | [README.es.md](./README.es.md) • **PDF:** [EN](./LAB_04_INSTRUCTIONS_EN.pdf) | [ES](./LAB_04_INSTRUCTIONS_ES.pdf)
 
 ---
 
