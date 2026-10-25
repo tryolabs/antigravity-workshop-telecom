@@ -48,11 +48,23 @@ if STATIC_DIR.exists():
 
 
 @app.get("/", response_class=HTMLResponse)
-def serve_dashboard() -> Any:
+def serve_dashboard(lang: str | None = Query(default=None, description="UI language: en or es")) -> Any:
+    if lang and lang.lower() == "es":
+        es_file = STATIC_DIR / "index.es.html"
+        if es_file.exists():
+            return FileResponse(str(es_file))
     index_file = STATIC_DIR / "index.html"
     if index_file.exists():
         return FileResponse(str(index_file))
     return HTMLResponse("<h1>Telecom Nexus API is running.</h1>")
+
+
+@app.get("/es", response_class=HTMLResponse)
+def serve_dashboard_es() -> Any:
+    es_file = STATIC_DIR / "index.es.html"
+    if es_file.exists():
+        return FileResponse(str(es_file))
+    return serve_dashboard(lang="es")
 
 
 @app.get("/api/v1/health")

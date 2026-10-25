@@ -91,6 +91,8 @@ Inside `http://localhost:8080`, select **`telecom_nexus`** from the agent dropdo
 - *"Execute autonomous 5G slice remediation for ORD-TMF622-9001 and calculate the protected Annual Contract Value."*
 - *"Dispatch an A2A JSON-RPC task for ORD-TMF622-9003."*
 
+You can also launch the **Telecom Nexus FastAPI Web Dashboard** on port `8001` (`./.venv/bin/uvicorn src.main:app --reload --port 8001`) and open `http://127.0.0.1:8001` (or `http://127.0.0.1:8001/es` / the **`EN | ES`** toggle in the top-right header) to test the **Check Feasibility** and **Remediate Slice** buttons live.
+
 ### Step 5: Deploy with Terraform & Register in Google Gemini Enterprise
 Review the Terraform configuration in `infra/terraform/` (`versions.tf`, `variables.tf`, `main.tf`, `outputs.tf`) and the Gemini Enterprise A2A registration script in `deploy/register_gemini_enterprise_agent.sh`.
 

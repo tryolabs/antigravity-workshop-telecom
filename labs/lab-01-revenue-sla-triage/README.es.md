@@ -37,6 +37,13 @@ Confirma que los bugs iniciales hacen fallar las pruebas del Lab 01:
 ./.venv/bin/pytest tests/test_lab01_triage.py
 ```
 
+Opcional — inicia el Dashboard Web en vivo de Telecom Nexus en una segunda terminal:
+
+```bash
+./.venv/bin/uvicorn src.main:app --reload --port 8001
+```
+Abre `http://127.0.0.1:8001/es` (o usa el selector de idioma **`EN | ES`** en la esquina superior derecha) para inspeccionar la telemetría en vivo y la tabla de SLA en español.
+
 ---
 
 ## 3. Instrucciones Paso a Paso con Google Antigravity

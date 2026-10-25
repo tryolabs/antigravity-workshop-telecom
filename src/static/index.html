@@ -61,6 +61,7 @@
       display: flex;
       gap: 10px;
       align-items: center;
+      flex-wrap: wrap;
     }
     .pill {
       padding: 6px 12px;
@@ -70,6 +71,27 @@
       background: rgba(56, 189, 248, 0.12);
       color: var(--accent);
       border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .lang-switch {
+      display: inline-flex;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+    .lang-btn {
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #030712;
     }
     button.btn {
       background: var(--accent);
@@ -189,35 +211,39 @@
     <div class="brand">
       <img src="/static/tryolabs-logo.png" alt="Tryolabs Logo" class="tryolabs-logo" />
       <div>
-        <h1>Telecom Nexus — 5G Network Slice SLA & Commercial Revenue Intelligence</h1>
-        <p>Delivered by <strong>Tryolabs</strong> • Powered by Google Antigravity & Gemini Enterprise • 3GPP TS 28.552 / GSMA TAP3 / TMF622</p>
+        <h1 id="hdr-title">Telecom Nexus — 5G Network Slice SLA & Commercial Revenue Intelligence</h1>
+        <p id="hdr-subtitle">Delivered by <strong>Tryolabs</strong> • Powered by Google Antigravity & Gemini Enterprise • 3GPP TS 28.552 / GSMA TAP3 / TMF622</p>
       </div>
     </div>
     <div class="badge-bar">
-      <span class="pill">Gemini Enterprise Governed</span>
+      <span class="pill" id="pill-governed">Gemini Enterprise Governed</span>
       <span class="pill">PLMN 310-410 (5G SA)</span>
-      <button class="btn" onclick="loadDashboard()">Refresh Telemetry</button>
+      <div class="lang-switch" title="Switch Language / Cambiar Idioma">
+        <button id="lang-en" class="lang-btn active" onclick="setLanguage('en')">EN</button>
+        <button id="lang-es" class="lang-btn" onclick="setLanguage('es')">ES</button>
+      </div>
+      <button class="btn" id="btn-refresh" onclick="loadDashboard()">Refresh Telemetry</button>
     </div>
   </header>
 
   <section class="kpi-grid">
     <div class="kpi-card">
-      <div class="kpi-label">Detected CDR Revenue Leakage</div>
+      <div class="kpi-label" id="kpi-leakage-label">Detected CDR Revenue Leakage</div>
       <div class="kpi-value" id="kpi-leakage" style="color: var(--warn);">$0.00</div>
       <div class="kpi-sub" id="kpi-leakage-sub">Loading TAP3 CDR audit...</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Active B2B SLA Penalty Exposure</div>
+      <div class="kpi-label" id="kpi-penalty-label">Active B2B SLA Penalty Exposure</div>
       <div class="kpi-value" id="kpi-penalty" style="color: var(--danger);">$0.00</div>
       <div class="kpi-sub" id="kpi-penalty-sub">Loading B2B SLA compliance...</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">5G RAN Slice Cells Health</div>
+      <div class="kpi-label" id="kpi-cells-label">5G RAN Slice Cells Health</div>
       <div class="kpi-value" id="kpi-cells" style="color: var(--ok);">0 / 0</div>
       <div class="kpi-sub" id="kpi-cells-sub">Healthy vs Congested/Degraded</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">TMF622 Pipeline MRR</div>
+      <div class="kpi-label" id="kpi-mrr-label">TMF622 Pipeline MRR</div>
       <div class="kpi-value" id="kpi-mrr" style="color: var(--accent);">$0.00</div>
       <div class="kpi-sub" id="kpi-mrr-sub">15 Enterprise B2B Orders</div>
     </div>
@@ -226,11 +252,11 @@
   <div class="section-grid">
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">1. Enterprise B2B SLA Contracts & Real-Time 5G Slice Compliance</div>
+        <div class="panel-title" id="panel-1-title">1. Enterprise B2B SLA Contracts & Real-Time 5G Slice Compliance</div>
       </div>
       <table>
         <thead>
-          <tr>
+          <tr id="sla-table-head">
             <th>Contract ID</th>
             <th>Enterprise Account</th>
             <th>Tier</th>
@@ -249,11 +275,11 @@
 
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">2. TMF622 B2B Sales Order Pipeline & Lab 4 Slice Remediation</div>
+        <div class="panel-title" id="panel-2-title">2. TMF622 B2B Sales Order Pipeline & Lab 4 Slice Remediation</div>
       </div>
       <table>
         <thead>
-          <tr>
+          <tr id="orders-table-head">
             <th>Order ID</th>
             <th>Enterprise Account</th>
             <th>Target TAC</th>
@@ -271,11 +297,11 @@
 
     <div class="panel">
       <div class="panel-header">
-        <div class="panel-title">3. 3GPP 5G RAN Cell Telemetry (20 Sectors Across 5 TACs)</div>
+        <div class="panel-title" id="panel-3-title">3. 3GPP 5G RAN Cell Telemetry (20 Sectors Across 5 TACs)</div>
       </div>
       <table>
         <thead>
-          <tr>
+          <tr id="ran-table-head">
             <th>Cell ID</th>
             <th>gNodeB</th>
             <th>TAC / Region</th>
@@ -296,6 +322,145 @@
   <div id="toast"></div>
 
   <script>
+    const I18N = {
+      en: {
+        pageTitle: "Telecom Nexus — 5G Slice SLA, CDR Revenue Assurance & B2B Intelligence",
+        hdrTitle: "Telecom Nexus — 5G Network Slice SLA & Commercial Revenue Intelligence",
+        hdrSubtitle: "Delivered by <strong>Tryolabs</strong> • Powered by Google Antigravity & Gemini Enterprise • 3GPP TS 28.552 / GSMA TAP3 / TMF622",
+        pillGoverned: "Gemini Enterprise Governed",
+        btnRefresh: "Refresh Telemetry",
+        kpiLeakageLabel: "Detected CDR Revenue Leakage",
+        kpiLeakageSubLoading: "Loading TAP3 CDR audit...",
+        kpiLeakageSub: (under, total) => `${under} underbilled CDRs out of ${total} audited`,
+        kpiPenaltyLabel: "Active B2B SLA Penalty Exposure",
+        kpiPenaltySubLoading: "Loading B2B SLA compliance...",
+        kpiPenaltySub: (breached, total) => `${breached} breached / ${total} evaluated contracts`,
+        kpiCellsLabel: "5G RAN Slice Cells Health",
+        kpiCellsSubLoading: "Healthy vs Congested/Degraded",
+        kpiCellsSub: (degraded) => `${degraded} sectors congested or degraded`,
+        kpiMrrLabel: "TMF622 Pipeline MRR",
+        kpiMrrSubLoading: "15 Enterprise B2B Orders",
+        kpiMrrSub: (count, arr) => `${count} TMF622 B2B orders (${arr} ARR)`,
+        panel1Title: "1. Enterprise B2B SLA Contracts & Real-Time 5G Slice Compliance",
+        slaHeaders: [
+          "Contract ID", "Enterprise Account", "Tier", "Contract Status", "TAC / Slice",
+          "Committed Latency", "Observed Worst Latency", "Degraded Cell", "SLA Status", "Penalty Exposure ($)"
+        ],
+        panel2Title: "2. TMF622 B2B Sales Order Pipeline & Lab 4 Slice Remediation",
+        ordersHeaders: [
+          "Order ID", "Enterprise Account", "Target TAC", "Slice (SST / 5QI)",
+          "Bandwidth", "Max Latency", "Est. MRR ($)", "Order Status", "Actions (Lab 4 API)"
+        ],
+        panel3Title: "3. 3GPP 5G RAN Cell Telemetry (20 Sectors Across 5 TACs)",
+        ranHeaders: [
+          "Cell ID", "gNodeB", "TAC / Region", "Slice SST", "PRB Load (%)",
+          "PDCP Latency", "RSRP / SINR", "Avail. BW", "Neighbor Cell", "Status"
+        ],
+        slaBreach: "SLA BREACH",
+        slaCompliant: "COMPLIANT",
+        btnCheckFeasibility: "Check Feasibility",
+        btnRemediateSlice: "Remediate Slice",
+        toastFeasibilityErr: (status, detail) => `Feasibility Check (${status}): ${detail}`,
+        toastFeasibilityOk: (orderId, status, cell) => `Order ${orderId} -> ${status}${cell ? ' (Cell: ' + cell + ')' : ''}`,
+        toastRemediateErr: (status, detail) => `Slice Remediation (${status}): ${detail}`,
+        toastRemediateOk: (orderId, val) => `Remediated ${orderId}! Preserved Commercial Value: ${val}`
+      },
+      es: {
+        pageTitle: "Telecom Nexus — SLA de Slices 5G, Aseguramiento de Ingresos CDR e Inteligencia B2B",
+        hdrTitle: "Telecom Nexus — SLA de Network Slices 5G e Inteligencia de Ingresos Comerciales",
+        hdrSubtitle: "Desarrollado por <strong>Tryolabs</strong> • Impulsado por Google Antigravity y Gemini Enterprise • 3GPP TS 28.552 / GSMA TAP3 / TMF622",
+        pillGoverned: "Gobernado por Gemini Enterprise",
+        btnRefresh: "Actualizar Telemetría",
+        kpiLeakageLabel: "Fuga de Ingresos CDR Detectada",
+        kpiLeakageSubLoading: "Cargando auditoría CDR TAP3...",
+        kpiLeakageSub: (under, total) => `${under} CDRs subfacturados de ${total} auditados`,
+        kpiPenaltyLabel: "Exposición Activa a Penalizaciones SLA B2B",
+        kpiPenaltySubLoading: "Cargando cumplimiento de SLA B2B...",
+        kpiPenaltySub: (breached, total) => `${breached} incumplidos / ${total} contratos evaluados`,
+        kpiCellsLabel: "Salud de Celdas RAN 5G por Slice",
+        kpiCellsSubLoading: "Saludables vs Congestionadas/Degradadas",
+        kpiCellsSub: (degraded) => `${degraded} sectores congestionados o degradados`,
+        kpiMrrLabel: "MRR del Pipeline TMF622",
+        kpiMrrSubLoading: "15 Órdenes Empresariales B2B",
+        kpiMrrSub: (count, arr) => `${count} órdenes B2B TMF622 (${arr} ARR)`,
+        panel1Title: "1. Contratos SLA Empresariales B2B y Cumplimiento de Slices 5G en Tiempo Real",
+        slaHeaders: [
+          "ID de Contrato", "Cuenta Empresarial", "Nivel", "Estado del Contrato", "TAC / Slice",
+          "Latencia Comprometida", "Peor Latencia Observada", "Celda Degradada", "Estado SLA", "Exposición a Penalización ($)"
+        ],
+        panel2Title: "2. Pipeline de Órdenes de Venta B2B TMF622 y Remediación de Slices (Lab 4)",
+        ordersHeaders: [
+          "ID de Orden", "Cuenta Empresarial", "TAC Destino", "Slice (SST / 5QI)",
+          "Ancho de Banda", "Latencia Máx.", "MRR Est. ($)", "Estado de la Orden", "Acciones (API Lab 4)"
+        ],
+        panel3Title: "3. Telemetría de Celdas RAN 5G 3GPP (20 Sectores en 5 TACs)",
+        ranHeaders: [
+          "ID de Celda", "gNodeB", "TAC / Región", "Slice SST", "Carga PRB (%)",
+          "Latencia PDCP", "RSRP / SINR", "BW Disp.", "Celda Vecina", "Estado"
+        ],
+        slaBreach: "INCUMPLIMIENTO SLA",
+        slaCompliant: "EN CUMPLIMIENTO",
+        btnCheckFeasibility: "Verificar Factibilidad",
+        btnRemediateSlice: "Remediar Slice",
+        toastFeasibilityErr: (status, detail) => `Verificación de Factibilidad (${status}): ${detail}`,
+        toastFeasibilityOk: (orderId, status, cell) => `Orden ${orderId} -> ${status}${cell ? ' (Celda: ' + cell + ')' : ''}`,
+        toastRemediateErr: (status, detail) => `Remediación de Slice (${status}): ${detail}`,
+        toastRemediateOk: (orderId, val) => `¡${orderId} remediada! Valor Comercial Preservado: ${val}`
+      }
+    };
+
+    function detectInitialLang() {
+      const params = new URLSearchParams(window.location.search);
+      const qLang = (params.get('lang') || '').toLowerCase();
+      if (qLang === 'es' || qLang === 'en') return qLang;
+      if (window.location.pathname.endsWith('/es') || window.location.pathname.endsWith('index.es.html')) return 'es';
+      const saved = localStorage.getItem('workshop_lang');
+      if (saved === 'es' || saved === 'en') return saved;
+      if ((navigator.language || '').toLowerCase().startsWith('es')) return 'es';
+      return 'en';
+    }
+
+    let currentLang = detectInitialLang();
+    let cachedDashboardData = null;
+
+    function setLanguage(lang) {
+      currentLang = (lang === 'es') ? 'es' : 'en';
+      localStorage.setItem('workshop_lang', currentLang);
+      document.documentElement.lang = currentLang;
+
+      document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
+      document.getElementById('lang-es').classList.toggle('active', currentLang === 'es');
+
+      const t = I18N[currentLang];
+      document.title = t.pageTitle;
+      document.getElementById('hdr-title').textContent = t.hdrTitle;
+      document.getElementById('hdr-subtitle').innerHTML = t.hdrSubtitle;
+      document.getElementById('pill-governed').textContent = t.pillGoverned;
+      document.getElementById('btn-refresh').textContent = t.btnRefresh;
+
+      document.getElementById('kpi-leakage-label').textContent = t.kpiLeakageLabel;
+      document.getElementById('kpi-penalty-label').textContent = t.kpiPenaltyLabel;
+      document.getElementById('kpi-cells-label').textContent = t.kpiCellsLabel;
+      document.getElementById('kpi-mrr-label').textContent = t.kpiMrrLabel;
+
+      document.getElementById('panel-1-title').textContent = t.panel1Title;
+      document.getElementById('panel-2-title').textContent = t.panel2Title;
+      document.getElementById('panel-3-title').textContent = t.panel3Title;
+
+      document.getElementById('sla-table-head').innerHTML = t.slaHeaders.map(h => `<th>${h}</th>`).join('');
+      document.getElementById('orders-table-head').innerHTML = t.ordersHeaders.map(h => `<th>${h}</th>`).join('');
+      document.getElementById('ran-table-head').innerHTML = t.ranHeaders.map(h => `<th>${h}</th>`).join('');
+
+      if (cachedDashboardData) {
+        renderDashboard(cachedDashboardData);
+      } else {
+        document.getElementById('kpi-leakage-sub').textContent = t.kpiLeakageSubLoading;
+        document.getElementById('kpi-penalty-sub').textContent = t.kpiPenaltySubLoading;
+        document.getElementById('kpi-cells-sub').textContent = t.kpiCellsSubLoading;
+        document.getElementById('kpi-mrr-sub').textContent = t.kpiMrrSubLoading;
+      }
+    }
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -308,6 +473,7 @@
     }
 
     async function checkFeasibility(orderId) {
+      const t = I18N[currentLang];
       const res = await fetch('/api/v1/orders/feasibility-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -315,14 +481,15 @@
       });
       const data = await res.json();
       if (!res.ok) {
-        showToast('Feasibility Check (' + res.status + '): ' + (data.detail || 'Error'));
+        showToast(t.toastFeasibilityErr(res.status, data.detail || 'Error'));
         return;
       }
-      showToast('Order ' + orderId + ' -> ' + data.feasibility_status + (data.recommended_cell_id ? ' (Cell: ' + data.recommended_cell_id + ')' : ''));
+      showToast(t.toastFeasibilityOk(orderId, data.feasibility_status, data.recommended_cell_id));
       loadDashboard();
     }
 
     async function remediateOrder(orderId) {
+      const t = I18N[currentLang];
       const res = await fetch('/api/v1/slices/remediate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -330,17 +497,15 @@
       });
       const data = await res.json();
       if (!res.ok) {
-        showToast('Slice Remediation (' + res.status + '): ' + (data.detail || 'Error'));
+        showToast(t.toastRemediateErr(res.status, data.detail || 'Error'));
         return;
       }
-      showToast('Remediated ' + orderId + '! Preserved Commercial Value: ' + fmtUsd(data.total_commercial_value_preserved_usd));
+      showToast(t.toastRemediateOk(orderId, fmtUsd(data.total_commercial_value_preserved_usd)));
       loadDashboard();
     }
 
-    async function loadDashboard() {
-      const res = await fetch('/api/v1/dashboard/summary');
-      const data = await res.json();
-
+    function renderDashboard(data) {
+      const t = I18N[currentLang];
       const cdr = data.cdr_audit;
       const sla = data.sla_audit;
       const cells = data.ran_cells || [];
@@ -348,21 +513,21 @@
 
       document.getElementById('kpi-leakage').textContent = fmtUsd(cdr.total_leakage_usd);
       document.getElementById('kpi-leakage-sub').textContent =
-        cdr.underbilled_cdr_count + ' underbilled CDRs out of ' + cdr.total_cdrs_audited + ' audited';
+        t.kpiLeakageSub(cdr.underbilled_cdr_count, cdr.total_cdrs_audited);
 
       document.getElementById('kpi-penalty').textContent = fmtUsd(sla.total_penalty_exposure_usd);
       document.getElementById('kpi-penalty-sub').textContent =
-        sla.breached_contracts_count + ' breached / ' + sla.evaluated_contracts_count + ' evaluated contracts';
+        t.kpiPenaltySub(sla.breached_contracts_count, sla.evaluated_contracts_count);
 
       const healthyCells = cells.filter(c => c.status === 'HEALTHY').length;
       document.getElementById('kpi-cells').textContent = healthyCells + ' / ' + cells.length;
       document.getElementById('kpi-cells-sub').textContent =
-        (cells.length - healthyCells) + ' sectors congested or degraded';
+        t.kpiCellsSub(cells.length - healthyCells);
 
       const totalMrr = orders.reduce((acc, o) => acc + Number(o.estimated_mrr_usd || 0), 0);
       document.getElementById('kpi-mrr').textContent = fmtUsd(totalMrr);
       document.getElementById('kpi-mrr-sub').textContent =
-        orders.length + ' TMF622 B2B orders (' + fmtUsd(totalMrr * 12) + ' ARR)';
+        t.kpiMrrSub(orders.length, fmtUsd(totalMrr * 12));
 
       const allContracts = [...(sla.breached_contracts || []), ...(sla.compliant_contracts || [])]
         .sort((a, b) => a.contract_id.localeCompare(b.contract_id));
@@ -378,7 +543,7 @@
           <td>${c.committed_latency_ms} ms</td>
           <td>${c.observed_worst_latency_ms} ms</td>
           <td><code>${c.degraded_cell_id}</code></td>
-          <td><span class="status-tag ${c.is_breached ? 'tag-danger' : 'tag-ok'}">${c.is_breached ? 'SLA BREACH' : 'COMPLIANT'}</span></td>
+          <td><span class="status-tag ${c.is_breached ? 'tag-danger' : 'tag-ok'}">${c.is_breached ? t.slaBreach : t.slaCompliant}</span></td>
           <td><strong>${fmtUsd(c.penalty_exposure_usd)}</strong></td>
         </tr>
       `).join('');
@@ -399,8 +564,8 @@
             <td>${fmtUsd(o.estimated_mrr_usd)}</td>
             <td><span class="status-tag ${tagClass}">${o.order_status}</span></td>
             <td>
-              <button class="btn btn-sm" onclick="checkFeasibility('${o.order_id}')">Check Feasibility</button>
-              <button class="btn btn-sm btn-purple" onclick="remediateOrder('${o.order_id}')">Remediate Slice</button>
+              <button class="btn btn-sm" onclick="checkFeasibility('${o.order_id}')">${t.btnCheckFeasibility}</button>
+              <button class="btn btn-sm btn-purple" onclick="remediateOrder('${o.order_id}')">${t.btnRemediateSlice}</button>
             </td>
           </tr>
         `;
@@ -426,6 +591,13 @@
       }).join('');
     }
 
+    async function loadDashboard() {
+      const res = await fetch('/api/v1/dashboard/summary');
+      cachedDashboardData = await res.json();
+      renderDashboard(cachedDashboardData);
+    }
+
+    setLanguage(currentLang);
     loadDashboard();
   </script>
 </body>

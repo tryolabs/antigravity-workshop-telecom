@@ -87,7 +87,7 @@ source .venv/bin/activate
 uvicorn src.main:app --reload --port 8001
 ```
 
-Abra **`http://127.0.0.1:8001`** en su navegador (o mediante el comando `/browser` de Antigravity) para inspeccionar el panel en vivo de **Tryolabs Telecom Nexus**, los endpoints de la API REST (`/api/summary`, `/api/cdr-leakage`, `/api/sla-breaches`, `/api/order-feasibility`) y la documentación interactiva Swagger (`/docs`).
+Abra **`http://127.0.0.1:8001/es`** (en español, o **`http://127.0.0.1:8001`** usando el selector de idioma **`EN | ES`** en la esquina superior derecha) en su navegador (o mediante el comando `/browser` de Antigravity) para inspeccionar el panel en vivo de **Tryolabs Telecom Nexus**, los endpoints de la API REST (`/api/v1/dashboard/summary`, `/api/v1/cdr/audit`, `/api/v1/sla/compliance`, `/api/v1/orders`) y la documentación interactiva Swagger (`/docs`).
 
 ---
 

@@ -37,6 +37,13 @@ Confirm that the starter bug causes the Lab 01 test suite to fail:
 ./.venv/bin/pytest tests/test_lab01_triage.py
 ```
 
+Optional — launch the Live Telecom Nexus Web Dashboard in a second terminal:
+
+```bash
+./.venv/bin/uvicorn src.main:app --reload --port 8001
+```
+Open `http://127.0.0.1:8001` (or `http://127.0.0.1:8001/es` for Spanish, or use the **`EN | ES`** toggle in the top-right header) to inspect the live telemetry and SLA table.
+
 ---
 
 ## 3. Step-by-Step Instructions with Google Antigravity
