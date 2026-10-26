@@ -4,11 +4,10 @@
 
 # Lab 02: Estándares Telecom con Rules y Custom Skills en Antigravity
 
-**Duración**: 45 minutos  
 **Impartido por**: **Tryolabs** (Impulsado por Google Antigravity & Gemini Enterprise)  
 **Capacidades de Antigravity Practicadas**: Reglas del Workspace (`GEMINI.md`, `.agents/rules/*.md`), Skills con Divulgación Progresiva (`.agents/skills/<name>/SKILL.md`), Menciones `@`, `/plan`, `/learn` y `/grill-me`.
 
-> **Idioma / Language:** [Español](./README.es.md) | [English](./README.md) • **Guía de Prompts:** [PROMPTS.es.md](./PROMPTS.es.md) | [PROMPTS.md](./PROMPTS.md) • **PDF:** [ES](./LAB_02_INSTRUCTIONS_ES.pdf) | [EN](./LAB_02_INSTRUCTIONS_EN.pdf)
+> **Idioma / Language:** [Español](./README.es.md) | [English](./README.md) • **Guía de Prompts:** [PROMPTS.es.md](./PROMPTS.es.md) | [PROMPTS.md](./PROMPTS.md) • **PDF:** [ES (Oscuro)](./LAB_02_INSTRUCTIONS_ES.pdf) | [ES (Claro)](./LAB_02_INSTRUCTIONS_ES_LIGHT.pdf) | [EN (Dark)](./LAB_02_INSTRUCTIONS_EN.pdf) | [EN (Light)](./LAB_02_INSTRUCTIONS_EN_LIGHT.pdf)
 
 ---
 

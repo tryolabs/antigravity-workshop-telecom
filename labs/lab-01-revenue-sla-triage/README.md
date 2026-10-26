@@ -4,10 +4,9 @@
 
 # Lab 01: 5G Slice SLA & CDR Revenue Assurance Triage
 
-**Duration**: 45 minutes  
 **Antigravity Capabilities Practiced**: `@` Context Mentions, `/plan` Mode, Inline Command (`Cmd+I` / `Ctrl+I`), Antigravity Tab (Supercomplete), Visual Diff Overlays, Terminal Test Execution, `/browser`, and `/learn`.
 
-> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN](./LAB_01_INSTRUCTIONS_EN.pdf) | [ES](./LAB_01_INSTRUCTIONS_ES.pdf)
+> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN (Dark)](./LAB_01_INSTRUCTIONS_EN.pdf) | [EN (Light)](./LAB_01_INSTRUCTIONS_EN_LIGHT.pdf) | [ES (Dark)](./LAB_01_INSTRUCTIONS_ES.pdf) | [ES (Light)](./LAB_01_INSTRUCTIONS_ES_LIGHT.pdf)
 
 ---
 

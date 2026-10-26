@@ -4,7 +4,7 @@
   <img src="../../src/static/tryolabs-logo.png" alt="Tryolabs Logo" width="170" />
 </p>
 
-> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN](./LAB_04_INSTRUCTIONS_EN.pdf) | [ES](./LAB_04_INSTRUCTIONS_ES.pdf)
+> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN (Dark)](./LAB_04_INSTRUCTIONS_EN.pdf) | [EN (Light)](./LAB_04_INSTRUCTIONS_EN_LIGHT.pdf) | [ES (Dark)](./LAB_04_INSTRUCTIONS_ES.pdf) | [ES (Light)](./LAB_04_INSTRUCTIONS_ES_LIGHT.pdf)
 
 ---
 

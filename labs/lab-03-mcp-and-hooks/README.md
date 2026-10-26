@@ -4,11 +4,10 @@
 
 # Lab 03: Live OSS/BSS Telemetry via FastMCP, Lifecycle Hooks & Gemini Enterprise Security
 
-**Duration**: 50 minutes  
 **Delivered by**: **Tryolabs** (Powered by Google Antigravity & Gemini Enterprise)  
 **Antigravity Capabilities Practiced**: Model Context Protocol (`mcp_config.json` + FastMCP), Lifecycle Hooks (`hooks.json` `PreToolUse` & `PostToolUse`), Antigravity Client Security Settings (Sandbox, Tool Execution Policy, Allowlists/Denylists), and Google Cloud **Gemini Enterprise** Governance.
 
-> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN](./LAB_03_INSTRUCTIONS_EN.pdf) | [ES](./LAB_03_INSTRUCTIONS_ES.pdf)
+> **Language / Idioma:** [English](./README.md) | [Español](./README.es.md) • **Prompt Playbook:** [PROMPTS.md](./PROMPTS.md) | [PROMPTS.es.md](./PROMPTS.es.md) • **PDF:** [EN (Dark)](./LAB_03_INSTRUCTIONS_EN.pdf) | [EN (Light)](./LAB_03_INSTRUCTIONS_EN_LIGHT.pdf) | [ES (Dark)](./LAB_03_INSTRUCTIONS_ES.pdf) | [ES (Light)](./LAB_03_INSTRUCTIONS_ES_LIGHT.pdf)
 
 ---
 

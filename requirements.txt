@@ -1,5 +1,5 @@
 # ==============================================================================
-# Tryolabs — Google Antigravity 4-Hour Developer Workshop (Telecom Edition)
+# Tryolabs — Google Antigravity Developer Workshop (Telecom Edition)
 # Platform: Telecom Nexus (5G Network Slice SLA, CDR Rating & B2B Order Engine)
 # Python Dependencies for Telecom Labs 01, 02, 03, and 04
 # ==============================================================================
