@@ -102,6 +102,22 @@ Cada laboratorio es 100% autónomo e incluye `install.sh` (configura el estado i
 | **Lab 03** | **Servidor MCP OSS/BSS en Vivo y Hooks de Cumplimiento SOX/CPNI**<br/>Exponga telemetría OSS/BSS en vivo y factibilidad de órdenes TMF622 mediante FastMCP, y aplique hooks de seguridad `PreToolUse` / `PreRunCommand` que bloquean SQL destructivo (`DROP TABLE`). | `.agents/mcp_config.json`, Herramientas `FastMCP`, `.agents/hooks.json` (`PreToolUse`, `PostToolUse`) | [README (ES)](labs/lab-03-mcp-and-hooks/README.es.md) \| [EN](labs/lab-03-mcp-and-hooks/README.md)<br/>[PROMPTS (ES)](labs/lab-03-mcp-and-hooks/PROMPTS.es.md) \| [EN](labs/lab-03-mcp-and-hooks/PROMPTS.md)<br/>[PDF Oscuro (ES)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_ES.pdf) \| [Claro (ES)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_ES_LIGHT.pdf) \| [Oscuro (EN)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_EN.pdf) \| [Claro (EN)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_EN_LIGHT.pdf) |
 | **Lab 04** | **Capstone Multi-Agente OSS/BSS: Google ADK, Protocolo A2A, `adk web` y Gemini Enterprise**<br/>Orqueste `RANSliceCapacityAgent` (OSS) y `BSSCommercialSLAAgent` (BSS) con **Google ADK**, exponga un servidor de **Protocolo A2A** (`/.well-known/agent.json` y `/api/v1/a2a`), pruebe en **ADK Dev UI (`adk web`)** y despliegue en **Cloud Run + Gemini Enterprise** vía **Terraform**. | Google ADK (`google-adk`), Protocolo A2A (JSON-RPC 2.0), `adk web`, Terraform (`infra/terraform/`), Registro en Gemini Enterprise | [README (ES)](labs/lab-04-multi-agent-capstone/README.es.md) \| [EN](labs/lab-04-multi-agent-capstone/README.md)<br/>[PROMPTS (ES)](labs/lab-04-multi-agent-capstone/PROMPTS.es.md) \| [EN](labs/lab-04-multi-agent-capstone/PROMPTS.md)<br/>[PDF Oscuro (ES)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_ES.pdf) \| [Claro (ES)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_ES_LIGHT.pdf) \| [Oscuro (EN)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_EN.pdf) \| [Claro (EN)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_EN_LIGHT.pdf) |
 
+### 4.1 Módulo Teórico de Cierre: Buenas Prácticas de Desarrollo Guiado por Especificaciones (SDD) con Google Antigravity
+
+Tras completar el **Laboratorio 04**, el taller concluye con un bloque teórico sobre **Desarrollo Guiado por Especificaciones (Spec-Driven Development — SDD)**, la disciplina de ingeniería en la que una especificación versionada y sin ambigüedades (`SPEC.md` + `PLAN.md`) actúa como la **única fuente de verdad** antes de generar código:
+
+1. **Ciclo de Vida SDD en 5 Etapas con Antigravity**:
+   - **Etapa 1 — Elicitación Interactiva (`/grill-me` y Contexto `@`)**: Cuestionar requerimientos, descubrir casos borde de 3GPP/TAP3/SOX y resolver ambigüedades antes de escribir código.
+   - **Etapa 2 — Especificación Ejecutable (`SPEC.md` y `/plan`)**: Redactar un `SPEC.md` estructurado en 5 secciones (*1. Contexto y Objetivo, 2. No-Objetivos / Anti-Alcance, 3. Contratos de Datos e Interfaces, 4. Invariantes de Dominio, 5. Criterios de Verificación Determinista*) y generar un artefacto `PLAN.md` paso a paso.
+   - **Etapa 3 — Codificación de Guardarraíles (`GEMINI.md`, `.agents/rules/`, `.agents/hooks.json`)**: Anclar invariantes innegociables de dominio (aritmética financiera `Decimal('0.01')`, conversión binaria base 1.024 GiB, enmascaramiento FCC CPNI y hooks `PreToolUse`) en reglas persistentes y hooks deterministas.
+   - **Etapa 4 — Verificación Guiada por Spec y Ejecución Paralela (`pytest`, `/teamwork`, `/boost`)**: Traducir los criterios de aceptación de `SPEC.md` en pruebas `pytest` primero y delegar la implementación a subagentes con validación objetiva.
+   - **Etapa 5 — Evolución Continua de la Especificación (`/learn` y `/compact`)**: Persistir patrones descubiertos en nuevas Skills/Rules con `/learn` y compactar la ventana de contexto con `/compact` manteniendo `SPEC.md` como ancla arquitectónica.
+2. **4 Antipatrones de SDD que Deben Evitarse**:
+   - **Vibe Coding sin Especificación** → Ejecutar siempre `/grill-me` + `/plan` primero.
+   - **Mega-Prompts Monolíticos** → Dividir la especificación en cortes verticales verificables (`1 corte = 1 suite de pruebas`).
+   - **Especificaciones Desechables** → Versionar `SPEC.md` en Git junto al código fuente (`Spec-as-Code`).
+   - **Confiar Ciegamente sin Verificación** → Acompañar `SPEC.md` con `pytest`, inspección `/browser` y hooks `PreToolUse`.
+
 ---
 
 ## 5. Seguridad Empresarial, Cumplimiento y Gobernanza en Telecomunicaciones

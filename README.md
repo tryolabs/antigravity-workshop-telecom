@@ -102,6 +102,22 @@ Each lab is 100% self-contained with `install.sh` (sets up the starter state), `
 | **Lab 03** | **Live OSS/BSS MCP Server & SOX/CPNI Compliance Hooks**<br/>Expose live SQLite OSS/BSS telemetry and TMF622 order feasibility via FastMCP, and enforce deterministic `PreToolUse` / `PreRunCommand` security hooks that block destructive SQL (`DROP TABLE`). | `.agents/mcp_config.json`, `FastMCP` Tools, `.agents/hooks.json` (`PreToolUse`, `PostToolUse`) | [README (EN)](labs/lab-03-mcp-and-hooks/README.md) \| [ES](labs/lab-03-mcp-and-hooks/README.es.md)<br/>[PROMPTS (EN)](labs/lab-03-mcp-and-hooks/PROMPTS.md) \| [ES](labs/lab-03-mcp-and-hooks/PROMPTS.es.md)<br/>[PDF Dark (EN)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_EN.pdf) \| [Light (EN)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_EN_LIGHT.pdf) \| [Dark (ES)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_ES.pdf) \| [Light (ES)](labs/lab-03-mcp-and-hooks/LAB_03_INSTRUCTIONS_ES_LIGHT.pdf) |
 | **Lab 04** | **Multi-Agent OSS/BSS Capstone: Google ADK, A2A Protocol, `adk web` & Gemini Enterprise**<br/>Orchestrate `RANSliceCapacityAgent` (OSS) and `BSSCommercialSLAAgent` (BSS) with **Google ADK**, expose an **A2A Protocol** server (`/.well-known/agent.json` & `/api/v1/a2a`), test in the **ADK Dev UI (`adk web`)**, and deploy to **Cloud Run + Gemini Enterprise** via **Terraform**. | Google ADK (`google-adk`), A2A Protocol (JSON-RPC 2.0), `adk web`, Terraform (`infra/terraform/`), Gemini Enterprise Registration | [README (EN)](labs/lab-04-multi-agent-capstone/README.md) \| [ES](labs/lab-04-multi-agent-capstone/README.es.md)<br/>[PROMPTS (EN)](labs/lab-04-multi-agent-capstone/PROMPTS.md) \| [ES](labs/lab-04-multi-agent-capstone/PROMPTS.es.md)<br/>[PDF Dark (EN)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_EN.pdf) \| [Light (EN)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_EN_LIGHT.pdf) \| [Dark (ES)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_ES.pdf) \| [Light (ES)](labs/lab-04-multi-agent-capstone/LAB_04_INSTRUCTIONS_ES_LIGHT.pdf) |
 
+### 4.1 Closing Theoretical Module: Spec-Driven Development (SDD) Best Practices with Google Antigravity
+
+Following **Lab 04**, the workshop concludes with a theoretical deep dive into **Spec-Driven Development (SDD)**—the engineering methodology where a versioned, unambiguous specification (`SPEC.md` + `PLAN.md`) acts as the **single source of truth** before any code is generated:
+
+1. **5-Stage SDD Lifecycle in Antigravity**:
+   - **Stage 1 — Interactive Elicitation (`/grill-me` & `@` Context)**: Stress-test requirements, surface hidden 3GPP/TAP3/SOX edge cases, and resolve design ambiguities before writing code.
+   - **Stage 2 — Executable Specification (`SPEC.md` & `/plan`)**: Author a structured 5-part `SPEC.md` (*1. Context & Goal, 2. Non-Goals & Anti-Scope, 3. Data Contracts & Interfaces, 4. Domain Invariants, 5. Deterministic Verification Criteria*) and generate a step-by-step `PLAN.md` artifact.
+   - **Stage 3 — Guardrail Encoding (`GEMINI.md`, `.agents/rules/`, `.agents/hooks.json`)**: Lock non-negotiable domain invariants (`Decimal('0.01')` currency math, 1,024-base binary GiB conversions, FCC CPNI subscriber masking, `PreToolUse` safety hooks) into persistent workspace rules and deterministic hooks.
+   - **Stage 4 — Spec-First Verification & Parallel Execution (`pytest`, `/teamwork`, `/boost`)**: Translate `SPEC.md` acceptance criteria into failing `pytest` tests first, then delegate implementation across subagents so tests act as an objective termination gate.
+   - **Stage 5 — Continuous Spec Evolution (`/learn` & `/compact`)**: Persist newly discovered domain patterns into reusable Skills/Rules via `/learn` and keep the context window anchored to `SPEC.md` via `/compact`.
+2. **4 SDD Anti-Patterns to Avoid**:
+   - **Vibe Coding Without a Spec** → Always run `/grill-me` + `/plan` first.
+   - **Monolithic Mega-Prompts** → Decompose specs into verifiable vertical slices (`1 slice = 1 test suite`).
+   - **Treating Specs as Static Throwaways** → Keep `SPEC.md` versioned in Git alongside code (`Spec-as-Code`).
+   - **Trusting Unverified Agent Output** → Pair `SPEC.md` with `pytest`, `/browser` inspection, and `PreToolUse` hooks.
+
 ---
 
 ## 5. Enterprise Security, Compliance & Governance in Telecom
